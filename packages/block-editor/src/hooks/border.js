@@ -83,7 +83,7 @@ export function BorderPanel( props ) {
 		<InspectorControls>
 			<PanelBody
 				className="block-editor-hooks__border-controls"
-				title={ __( 'Border settings' ) }
+				title={ __( 'Border' ) }
 				initialOpen={ false }
 			>
 				{ isStyleSupported && <BorderStyleEdit { ...props } /> }
