@@ -539,8 +539,11 @@ function RichText(
 			return;
 		}
 
-		onCreateUndoLevel();
 		lastHistoryValue.current = _value.current;
+
+		if ( onCreateUndoLevel ) {
+			onCreateUndoLevel();
+		}
 	}
 
 	const isComposing = useRef( false );
