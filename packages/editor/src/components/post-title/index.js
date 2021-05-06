@@ -9,7 +9,6 @@ import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
-import { ENTER } from '@wordpress/keycodes';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { pasteHandler } from '@wordpress/blocks';
 import { store as blockEditorStore } from '@wordpress/block-editor';
@@ -101,13 +100,6 @@ export default function PostTitle() {
 
 	function onChange( value ) {
 		onUpdate( value.replace( REGEXP_NEWLINES, ' ' ) );
-	}
-
-	function onKeyDown( event ) {
-		if ( event.keyCode === ENTER ) {
-			event.preventDefault();
-			onEnterPress();
-		}
 	}
 
 	function onPaste( event ) {
@@ -202,7 +194,7 @@ export default function PostTitle() {
 					placeholder={ decodedPlaceholder || __( 'Add title' ) }
 					onFocus={ onSelect }
 					onBlur={ onUnselect }
-					onKeyDown={ onKeyDown }
+					onEnter={ onEnterPress }
 					onKeyPress={ onUnselect }
 					onPaste={ onPaste }
 				/>
