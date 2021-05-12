@@ -9,7 +9,7 @@ import { TextInput, View, TouchableHighlight } from 'react-native';
 import { useState, useRef } from '@wordpress/element';
 import { usePreferredColorSchemeStyle } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
-import { ToolbarButton } from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import {
 	Icon,
 	cancelCircleFilled,
@@ -46,7 +46,7 @@ function InserterSearchForm( { value, onChange } ) {
 		<TouchableHighlight accessible={ false }>
 			<View style={ searchFormStyle }>
 				{ isActive ? (
-					<ToolbarButton
+					<Button
 						title={ __( 'Cancel search' ) }
 						icon={ arrowLeft }
 						onClick={ () => {
@@ -56,7 +56,7 @@ function InserterSearchForm( { value, onChange } ) {
 						} }
 					/>
 				) : (
-					<ToolbarButton
+					<Button
 						title={ __( 'Search block' ) }
 						icon={ searchIcon }
 						onClick={ () => {
@@ -76,7 +76,7 @@ function InserterSearchForm( { value, onChange } ) {
 				/>
 
 				{ !! value && (
-					<ToolbarButton
+					<Button
 						title={ __( 'Clear search' ) }
 						icon={ <Icon icon={ cancelCircleFilled } /> }
 						onClick={ () => {
