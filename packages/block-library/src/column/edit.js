@@ -10,6 +10,7 @@ import {
 	InnerBlocks,
 	BlockControls,
 	BlockVerticalAlignmentToolbar,
+	getColorClassName,
 	InspectorControls,
 	useBlockProps,
 	__experimentalUseInnerBlocksProps as useInnerBlocksProps,
@@ -28,14 +29,16 @@ import { sprintf, __ } from '@wordpress/i18n';
 import { CSS_UNITS } from '../columns/utils';
 
 function ColumnEdit( {
-	attributes: { verticalAlignment, width, templateLock = false },
+	attributes: {
+		borderColor,
+		style,
+		verticalAlignment,
+		width,
+		templateLock = false,
+	},
 	setAttributes,
 	clientId,
 } ) {
-	const classes = classnames( 'block-core-columns', {
-		[ `is-vertically-aligned-${ verticalAlignment }` ]: verticalAlignment,
-	} );
-
 	const { columnsIds, hasChildBlocks, rootClientId } = useSelect(
 		( select ) => {
 			const { getBlockOrder, getBlockRootClientId } = select(
@@ -65,13 +68,32 @@ function ColumnEdit( {
 	};
 
 	const widthWithUnit = Number.isFinite( width ) ? width + '%' : width;
-	const blockProps = useBlockProps( {
-		className: classes,
-		style: widthWithUnit ? { flexBasis: widthWithUnit } : undefined,
-	} );
 
 	const columnsCount = columnsIds.length;
 	const currentColumnPosition = columnsIds.indexOf( clientId ) + 1;
+
+	const borderColorClass = getColorClassName( 'border-color', borderColor );
+
+	const classes = classnames( 'block-core-columns', borderColorClass, {
+		[ `is-vertically-aligned-${ verticalAlignment }` ]: verticalAlignment,
+	} );
+
+	// Inner column blocks will only apply the border support provided styles
+	// as a right hand border until border support is updated to allow
+	// configuration of individual borders.
+	//
+	// CSS will have to force last column to remove right hand border due to not
+	// being able to determine column position within the block's save function.
+	const blockProps = useBlockProps( {
+		className: classes,
+		style: {
+			flexBasis: widthWithUnit || undefined,
+			borderRightColor:
+				( ! borderColorClass && style?.border?.color ) || undefined,
+			borderRightStyle: style?.border?.style || undefined,
+			borderRightWidth: style?.border?.width || undefined,
+		},
+	} );
 
 	const label = sprintf(
 		/* translators: 1: Block label (i.e. "Block: Column"), 2: Position of the selected block, 3: Total number of sibling blocks of the same type */

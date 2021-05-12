@@ -3,6 +3,9 @@
 	margin-bottom: 1.75em;
 	box-sizing: border-box;
 
+	// Assists border radius application via block supports.
+	overflow: hidden;
+
 	// Responsiveness: Allow wrapping on mobile.
 	flex-wrap: wrap;
 

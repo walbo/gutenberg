@@ -20,6 +20,12 @@
 	"supports": {
 		"anchor": true,
 		"reusable": false,
-		"html": false
+		"html": false,
+		"__experimentalBorder": {
+			"color": true,
+			"style": true,
+			"width": true,
+			"__experimentalSkipSerialization": true
+		}
 	}
 }
