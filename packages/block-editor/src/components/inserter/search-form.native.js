@@ -15,12 +15,11 @@ import {
 import { useState, useRef, useMemo } from '@wordpress/element';
 import { usePreferredColorSchemeStyleBem } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
-import { Button } from '@wordpress/components';
+import { Button, Gridicons } from '@wordpress/components';
 import {
 	Icon,
 	cancelCircleFilled as cancelCircleFilledIcon,
 	arrowLeft as arrowLeftIcon,
-	search as searchIcon,
 	close as closeIcon,
 } from '@wordpress/icons';
 
@@ -114,7 +113,7 @@ function InserterSearchForm( { value, onChange } ) {
 					style={ iconStyle }
 				/>
 			) : (
-				<Icon icon={ searchIcon } fill={ iconStyle.color } />
+				<Icon icon={ Gridicons.search } fill={ iconStyle.color } />
 			);
 
 		return (
