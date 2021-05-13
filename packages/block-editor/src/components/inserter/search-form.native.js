@@ -109,7 +109,7 @@ function InserterSearchForm( { value, onChange } ) {
 				<Button
 					label={ __( 'Cancel Search' ) }
 					icon={ arrowLeftIcon }
-					onClic={ onCancel }
+					onClick={ onCancel }
 					style={ iconStyle }
 				/>
 			) : (
