@@ -18,7 +18,7 @@ export default function save( { attributes } ) {
 	const widthWithUnit = Number.isFinite( width ) ? width + '%' : width;
 	const borderColorClass = getColorClassName( 'border-color', borderColor );
 
-	const wrapperClasses = classnames( {
+	const wrapperClasses = classnames( borderColorClass, {
 		[ `is-vertically-aligned-${ verticalAlignment }` ]: verticalAlignment,
 	} );
 
