@@ -40,17 +40,6 @@ function BlockManager( {
 
 	return (
 		<div className="edit-post-block-manager__content">
-			<TextControl
-				type="search"
-				label={ __( 'Search for a block' ) }
-				value={ search }
-				onChange={ ( nextSearch ) =>
-					setState( {
-						search: nextSearch,
-					} )
-				}
-				className="edit-post-block-manager__search"
-			/>
 			{ !! numberOfHiddenBlocks && (
 				<div className="edit-post-block-manager__disabled-blocks-count">
 					{ sprintf(
@@ -64,6 +53,17 @@ function BlockManager( {
 					) }
 				</div>
 			) }
+			<TextControl
+				type="search"
+				label={ __( 'Search for a block' ) }
+				value={ search }
+				onChange={ ( nextSearch ) =>
+					setState( {
+						search: nextSearch,
+					} )
+				}
+				className="edit-post-block-manager__search"
+			/>
 			<div
 				tabIndex="0"
 				role="region"
