@@ -6,14 +6,17 @@ import {
 	View,
 	TouchableHighlight,
 	TouchableWithoutFeedback,
+	Text,
 	Dimensions,
 } from 'react-native';
 
 /**
  * WordPress dependencies
  */
+import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
 import { BottomSheet, InserterButton } from '@wordpress/components';
+import { usePreferredColorSchemeStyleBem } from '@wordpress/compose';
 
 /**
  * Internal dependencies
@@ -39,6 +42,15 @@ function InserterSearchResults( {
 		};
 	}, [] );
 
+	const {
+		'inserter-search-results__column': columnStyles,
+		'inserter-search-results__row-separator': rowSeparatorStyles,
+		'inserter-search-results__list': listStyles,
+		'inserter-search-results__no-results-container': noResultsContainerStyle,
+		'inserter-search-results__no-results-text-primary': noResultsTextPrimaryStyle,
+		'inserter-search-results__no-results-text-secondary': noResultsTextSecondaryStyle,
+	} = usePreferredColorSchemeStyleBem( styles );
+
 	function calculateItemWidth() {
 		const {
 			paddingLeft: itemPaddingLeft,
@@ -50,8 +62,7 @@ function InserterSearchResults( {
 
 	function onLayout() {
 		const sumLeftRightPadding =
-			styles.columnPadding.paddingLeft +
-			styles.columnPadding.paddingRight;
+			columnStyles.paddingLeft + columnStyles.paddingRight;
 
 		const bottomSheetWidth = BottomSheet.getWidth();
 		const containerTotalWidth = bottomSheetWidth - sumLeftRightPadding;
@@ -73,6 +84,21 @@ function InserterSearchResults( {
 		}
 	}
 
+	if ( items?.length === 0 ) {
+		return (
+			<View>
+				<View style={ noResultsContainerStyle }>
+					<Text style={ noResultsTextPrimaryStyle }>
+						{ __( 'No blocks found' ) }
+					</Text>
+					<Text style={ noResultsTextSecondaryStyle }>
+						{ __( 'Try another search term' ) }
+					</Text>
+				</View>
+			</View>
+		);
+	}
+
 	return (
 		<TouchableHighlight accessible={ false }>
 			<FlatList
@@ -84,7 +110,7 @@ function InserterSearchResults( {
 				initialNumToRender={ 3 }
 				ItemSeparatorComponent={ () => (
 					<TouchableWithoutFeedback accessible={ false }>
-						<View style={ styles.rowSeparator } />
+						<View style={ rowSeparatorStyles } />
 					</TouchableWithoutFeedback>
 				) }
 				keyExtractor={ ( item ) => item.name }
@@ -103,7 +129,7 @@ function InserterSearchResults( {
 					...listProps.contentContainerStyle,
 					{
 						paddingBottom:
-							safeAreaBottomInset || styles.list.paddingBottom,
+							safeAreaBottomInset || listStyles.paddingBottom,
 					},
 				] }
 			/>
