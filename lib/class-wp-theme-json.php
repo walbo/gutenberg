@@ -1138,7 +1138,6 @@ class WP_Theme_JSON {
 		$properties   = array();
 		$properties[] = array( 'color', 'palette' );
 		$properties[] = array( 'color', 'gradients' );
-		$properties[] = array( 'custom' );
 		$properties[] = array( 'spacing', 'units' );
 		$properties[] = array( 'typography', 'fontSizes' );
 		$properties[] = array( 'typography', 'fontFamilies' );
