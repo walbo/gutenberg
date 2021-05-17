@@ -5,4 +5,3 @@ export * from './elevation';
 export * from './form-group';
 export * from './shortcut';
 export * from './spinner';
-export * from './visually-hidden';
