@@ -10,7 +10,7 @@ import { listView } from '@wordpress/icons';
 /**
  * Internal dependencies
  */
-import BlockNavigationTree from './tree';
+import BlockNavigation from './';
 import { store as blockEditorStore } from '../../store';
 
 function BlockNavigationDropdownToggle( {
@@ -65,7 +65,7 @@ function BlockNavigationDropdown(
 						{ __( 'List view' ) }
 					</p>
 
-					<BlockNavigationTree
+					<BlockNavigation
 						showNestedBlocks
 						showOnlyCurrentHierarchy
 						__experimentalFeatures={ __experimentalFeatures }
