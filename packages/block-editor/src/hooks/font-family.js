@@ -113,6 +113,6 @@ export function useIsFontFamilyDisabled( { name } ) {
 
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'core/fontSize/addSaveProps',
+	'core/fontFamily/addSaveProps',
 	addSaveProps
 );
