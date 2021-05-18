@@ -30,6 +30,7 @@
 		"src/heading/**/*",
 		"src/icon/**/*",
 		"src/scroll-lock/**/*",
+		"src/segmented-control/**/*",
 		"src/shortcut/**/*",
 		"src/spinner/**/*",
 		"src/spacer/**/*",
