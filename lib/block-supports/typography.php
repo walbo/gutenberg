@@ -91,7 +91,7 @@ function gutenberg_apply_typography_support( $block_type, $block_attributes ) {
 	if ( $has_font_family_support ) {
 		$font_family = $block_attributes['style']['typography']['fontFamily'];
 		// Apply required class and style.
-		if ( isset( $font_family ) ) {
+		if ( isset( $font_family ) ) { // Legacy case.
 			if ( strpos( $font_family, 'var:preset|font-family' ) !== false ) {
 				// Get the name from the string and add proper styles.
 				$index_to_splice  = strrpos( $font_family, '|' ) + 1;
@@ -100,6 +100,8 @@ function gutenberg_apply_typography_support( $block_type, $block_attributes ) {
 			} else {
 				$styles[] = sprintf( 'font-family: %s;', $font_family );
 			}
+		} elseif ( isset( $block_attributes['fontFamily'] ) ) { // Current attribute style.
+			$styles[] = sprintf( 'font-family: %s;', $block_attributes['fontFamily'] );
 		}
 	}
 
