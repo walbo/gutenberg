@@ -89,17 +89,16 @@ function gutenberg_apply_typography_support( $block_type, $block_attributes ) {
 
 	// Font Family.
 	if ( $has_font_family_support ) {
-		$has_font_family = isset( $block_attributes['style']['typography']['fontFamily'] );
+		$font_family = $block_attributes['style']['typography']['fontFamily'];
 		// Apply required class and style.
-		if ( $has_font_family ) {
-			$font_family = $block_attributes['style']['typography']['fontFamily'];
+		if ( isset( $font_family ) ) {
 			if ( strpos( $font_family, 'var:preset|font-family' ) !== false ) {
 				// Get the name from the string and add proper styles.
 				$index_to_splice  = strrpos( $font_family, '|' ) + 1;
 				$font_family_name = substr( $font_family, $index_to_splice );
 				$styles[]         = sprintf( 'font-family: var(--wp--preset--font-family--%s);', $font_family_name );
 			} else {
-				$styles[] = sprintf( 'font-family: %s;', $block_attributes['style']['typography']['fontFamily'] );
+				$styles[] = sprintf( 'font-family: %s;', $font_family );
 			}
 		}
 	}
