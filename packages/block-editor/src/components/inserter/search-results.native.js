@@ -128,6 +128,7 @@ function InserterSearchResults( {
 				contentContainerStyle={ [
 					...listProps.contentContainerStyle,
 					{
+						paddingTop: listStyles.paddingTop,
 						paddingBottom:
 							safeAreaBottomInset || listStyles.paddingBottom,
 					},
