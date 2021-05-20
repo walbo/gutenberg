@@ -92,6 +92,10 @@ function ColumnEdit( {
 				( ! borderColorClass && style?.border?.color ) || undefined,
 			borderRightStyle: style?.border?.style || undefined,
 			borderRightWidth: style?.border?.width || undefined,
+			borderBottomColor:
+				( ! borderColorClass && style?.border?.color ) || undefined,
+			borderBottomStyle: style?.border?.style || undefined,
+			borderBottomWidth: style?.border?.width || undefined,
 		},
 	} );
 

@@ -40,6 +40,7 @@
 		// Responsiveness: Show at most one columns on mobile. This must be
 		// important since the Column assigns its own width as an inline style.
 		flex-basis: 100% !important;
+		border-right: none !important;
 	}
 
 	// Prevent the columns from growing wider than their distributed sizes.
@@ -51,6 +52,12 @@
 
 	// Between mobile and large viewports, allow 2 columns.
 	@media (min-width: #{ ($break-small) }) and (max-width: #{ ($break-medium - 1) }) {
+		// Until border block support allows configuration of individual borders
+		// and responsive capabilities the same border config is used for both
+		// right and bottom borders with only bottom border being shown when
+		// stacked on mobile.
+		border-bottom: none !important;
+
 		// Only add two column styling if there are two or more columns
 		&:not(:only-child) {
 			// As with mobile styles, this must be important since the Column
@@ -64,6 +71,7 @@
 		// Only apply this beyond the mobile breakpoint, as there's only a single column on mobile.
 		&:nth-child(even) {
 			margin-left: 2em;
+			border-right: none !important;
 		}
 	}
 
@@ -78,6 +86,10 @@
 		// explicit widths (if any exist).
 		flex-basis: 0;
 		flex-grow: 1;
+
+		// Hide border bottom at large viewports, only display right border if
+		// not the last column.
+		border-bottom: none !important;
 
 		// Columns with an explicitly-assigned width should maintain their
 		// `flex-basis` width and not grow.
@@ -114,6 +126,6 @@
 
 	// Use of !important is required to remove border support styles.
 	&:last-child {
-		border-right: none !important;
+		border: none !important;
 	}
 }
