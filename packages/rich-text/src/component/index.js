@@ -168,11 +168,6 @@ export function useRichText( {
 		hadSelectionUpdate.current = false;
 	}, [ hadSelectionUpdate.current ] );
 
-	function focus() {
-		ref.current.focus();
-		applyRecord( record.current );
-	}
-
 	const mergedRefs = useMergeRefs( [
 		ref,
 		useDefaultStyle(),
@@ -207,7 +202,6 @@ export function useRichText( {
 	return {
 		value: record.current,
 		onChange: handleChange,
-		onFocus: focus,
 		ref: mergedRefs,
 	};
 }
