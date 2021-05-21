@@ -26,7 +26,7 @@ import { store as blockEditorStore } from '../../store';
 /**
  * An array representing data for blocks in the DOM used by drag and drop.
  *
- * @typedef {Object} WPBlockNavigationDropZoneBlocks
+ * @typedef {Object} WPListViewDropZoneBlocks
  * @property {string}  clientId                        The client id for the block.
  * @property {string}  rootClientId                    The root client id for the block.
  * @property {number}  blockIndex                      The block's index.
@@ -40,7 +40,7 @@ import { store as blockEditorStore } from '../../store';
 /**
  * An object containing details of a drop target.
  *
- * @typedef {Object} WPBlockNavigationDropZoneTarget
+ * @typedef {Object} WPListViewDropZoneTarget
  * @property {string}                   blockIndex   The insertion index.
  * @property {string}                   rootClientId The root client id for the block.
  * @property {string|undefined}         clientId     The client id for the block.
@@ -87,12 +87,12 @@ const ALLOWED_DROP_EDGES = [ 'top', 'bottom' ];
 /**
  * Given blocks data and the cursor position, compute the drop target.
  *
- * @param {WPBlockNavigationDropZoneBlocks} blocksData Data about the blocks in block navigation.
+ * @param {WPListViewDropZoneBlocks} blocksData Data about the blocks in block navigation.
  * @param {WPPoint} position The point representing the cursor position when dragging.
  *
- * @return {WPBlockNavigationDropZoneTarget} An object containing data about the drop target.
+ * @return {WPListViewDropZoneTarget} An object containing data about the drop target.
  */
-function getBlockNavigationDropTarget( blocksData, position ) {
+function getListViewDropTarget( blocksData, position ) {
 	let candidateEdge;
 	let candidateBlockData;
 	let candidateDistance;
@@ -192,9 +192,9 @@ function getBlockNavigationDropTarget( blocksData, position ) {
 /**
  * A react hook for implementing a drop zone in block navigation.
  *
- * @return {WPBlockNavigationDropZoneTarget} The drop target.
+ * @return {WPListViewDropZoneTarget} The drop target.
  */
-export default function useBlockNavigationDropZone() {
+export default function useListViewDropZone() {
 	const {
 		getBlockRootClientId,
 		getBlockIndex,
@@ -242,10 +242,7 @@ export default function useBlockNavigationDropZone() {
 				};
 			} );
 
-			const newTarget = getBlockNavigationDropTarget(
-				blocksData,
-				position
-			);
+			const newTarget = getListViewDropTarget( blocksData, position );
 
 			if ( newTarget ) {
 				setTarget( newTarget );

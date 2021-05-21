@@ -20,7 +20,7 @@ import useBlockDisplayInformation from '../use-block-display-information';
 import { getBlockPositionDescription } from './utils';
 import BlockTitle from '../block-title';
 
-function BlockNavigationBlockSelectButton(
+function ListViewBlockSelectButton(
 	{
 		className,
 		block: { clientId },
@@ -38,8 +38,8 @@ function BlockNavigationBlockSelectButton(
 	ref
 ) {
 	const blockInformation = useBlockDisplayInformation( clientId );
-	const instanceId = useInstanceId( BlockNavigationBlockSelectButton );
-	const descriptionId = `block-navigation-block-select-button__${ instanceId }`;
+	const instanceId = useInstanceId( ListViewBlockSelectButton );
+	const descriptionId = `list-view-block-select-button__${ instanceId }`;
 	const blockPositionDescription = getBlockPositionDescription(
 		position,
 		siblingBlockCount,
@@ -50,7 +50,7 @@ function BlockNavigationBlockSelectButton(
 		<>
 			<Button
 				className={ classnames(
-					'block-editor-block-navigation-block-select-button',
+					'block-editor-list-view-block-select-button',
 					className
 				) }
 				onClick={ onClick }
@@ -66,7 +66,7 @@ function BlockNavigationBlockSelectButton(
 				<BlockIcon icon={ blockInformation?.icon } showColors />
 				<BlockTitle clientId={ clientId } />
 				{ blockInformation?.anchor && (
-					<span className="block-editor-block-navigation-block-select-button__anchor">
+					<span className="block-editor-list-view-block-select-button__anchor">
 						{ blockInformation.anchor }
 					</span>
 				) }
@@ -77,7 +77,7 @@ function BlockNavigationBlockSelectButton(
 				) }
 			</Button>
 			<div
-				className="block-editor-block-navigation-block-select-button__description"
+				className="block-editor-list-view-block-select-button__description"
 				id={ descriptionId }
 			>
 				{ blockPositionDescription }
@@ -86,4 +86,4 @@ function BlockNavigationBlockSelectButton(
 	);
 }
 
-export default forwardRef( BlockNavigationBlockSelectButton );
+export default forwardRef( ListViewBlockSelectButton );

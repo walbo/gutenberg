@@ -11,10 +11,10 @@ import { Fragment } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import BlockNavigationBlock from './block';
-import BlockNavigationAppender from './appender';
+import ListViewBlock from './block';
+import ListViewAppender from './appender';
 import { isClientIdSelected } from './utils';
-export default function BlockNavigationBranch( props ) {
+export default function ListViewBranch( props ) {
 	const {
 		blocks,
 		selectBlock,
@@ -73,7 +73,7 @@ export default function BlockNavigationBranch( props ) {
 
 				return (
 					<Fragment key={ clientId }>
-						<BlockNavigationBlock
+						<ListViewBlock
 							block={ block }
 							onClick={ selectBlock }
 							isSelected={ isSelected }
@@ -88,7 +88,7 @@ export default function BlockNavigationBranch( props ) {
 							path={ updatedPath }
 						/>
 						{ hasNestedBranch && (
-							<BlockNavigationBranch
+							<ListViewBranch
 								blocks={ innerBlocks }
 								selectedBlockClientIds={
 									selectedBlockClientIds
@@ -109,7 +109,7 @@ export default function BlockNavigationBranch( props ) {
 				);
 			} ) }
 			{ hasAppender && (
-				<BlockNavigationAppender
+				<ListViewAppender
 					parentBlockClientId={ parentBlockClientId }
 					position={ rowCount }
 					rowCount={ appenderPosition }
@@ -122,6 +122,6 @@ export default function BlockNavigationBranch( props ) {
 	);
 }
 
-BlockNavigationBranch.defaultProps = {
+ListViewBranch.defaultProps = {
 	selectBlock: () => {},
 };

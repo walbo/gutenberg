@@ -12,13 +12,13 @@ import { forwardRef } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import { useBlockNavigationContext } from './context';
-import BlockNavigationBlockSlot from './block-slot';
-import BlockNavigationBlockSelectButton from './block-select-button';
+import { useListViewContext } from './context';
+import ListViewBlockSlot from './block-slot';
+import ListViewBlockSelectButton from './block-select-button';
 import BlockDraggable from '../block-draggable';
 import { store as blockEditorStore } from '../../store';
 
-const BlockNavigationBlockContents = forwardRef(
+const ListViewBlockContents = forwardRef(
 	(
 		{
 			onClick,
@@ -34,7 +34,7 @@ const BlockNavigationBlockContents = forwardRef(
 		const {
 			__experimentalFeatures,
 			blockDropTarget = {},
-		} = useBlockNavigationContext();
+		} = useListViewContext();
 
 		const { clientId } = block;
 
@@ -78,23 +78,20 @@ const BlockNavigationBlockContents = forwardRef(
 		const isDroppingToInnerBlocks =
 			dropTargetRootClientId === clientId && dropPosition === 'inside';
 
-		const className = classnames(
-			'block-editor-block-navigation-block-contents',
-			{
-				'is-dropping-before': isDroppingBefore || isBlockMoveTarget,
-				'is-dropping-after': isDroppingAfter,
-				'is-dropping-to-inner-blocks': isDroppingToInnerBlocks,
-			}
-		);
+		const className = classnames( 'block-editor-list-view-block-contents', {
+			'is-dropping-before': isDroppingBefore || isBlockMoveTarget,
+			'is-dropping-after': isDroppingAfter,
+			'is-dropping-to-inner-blocks': isDroppingToInnerBlocks,
+		} );
 
 		return (
 			<BlockDraggable
 				clientIds={ [ block.clientId ] }
-				elementId={ `block-navigation-block-${ block.clientId }` }
+				elementId={ `list-view-block-${ block.clientId }` }
 			>
 				{ ( { draggable, onDragStart, onDragEnd } ) =>
 					__experimentalFeatures ? (
-						<BlockNavigationBlockSlot
+						<ListViewBlockSlot
 							ref={ ref }
 							className={ className }
 							block={ block }
@@ -109,7 +106,7 @@ const BlockNavigationBlockContents = forwardRef(
 							{ ...props }
 						/>
 					) : (
-						<BlockNavigationBlockSelectButton
+						<ListViewBlockSelectButton
 							ref={ ref }
 							className={ className }
 							block={ block }
@@ -130,4 +127,4 @@ const BlockNavigationBlockContents = forwardRef(
 	}
 );
 
-export default BlockNavigationBlockContents;
+export default ListViewBlockContents;

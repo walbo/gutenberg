@@ -29,7 +29,7 @@
 	}
 
 	// Hide table of contents and block navigation on mobile.
-	.block-editor-block-navigation {
+	.block-editor-list-view {
 		display: none;
 
 		@include break-small() {
