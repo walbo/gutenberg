@@ -19,7 +19,7 @@
  *
  * @see WP_REST_Controller
  */
-class WP_REST_Pattern_Directory_Controller extends WP_REST_Controller {
+class WP_REST_Pattern_Directory_Controller_V2 extends WP_REST_Controller {
 
 	/**
 	 * Constructs the controller.
@@ -168,6 +168,7 @@ class WP_REST_Pattern_Directory_Controller extends WP_REST_Controller {
 			'keywords'       => array_map( 'sanitize_title', $raw_pattern->keyword_slugs ),
 			'description'    => sanitize_text_field( $raw_pattern->meta->wpop_description ),
 			'viewport_width' => absint( $raw_pattern->meta->wpop_viewport_width ),
+			'block_types'    => array_map( 'sanitize_text_field', $raw_pattern->meta->wpop_block_types ),
 		);
 
 		$prepared_pattern = $this->add_additional_fields_to_object( $prepared_pattern, $request );
@@ -250,6 +251,14 @@ class WP_REST_Pattern_Directory_Controller extends WP_REST_Controller {
 				'viewport_width' => array(
 					'description' => __( 'The preferred width of the viewport when previewing a pattern, in pixels.', 'gutenberg' ),
 					'type'        => 'integer',
+					'context'     => array( 'view', 'embed' ),
+				),
+
+				'block_types' => array(
+					'description' => __( 'A list of block types this pattern supports for transforms.', 'gutenberg' ),
+					'type'        => 'array',
+					'uniqueItems' => true,
+					'items'       => array( 'type' => 'string' ),
 					'context'     => array( 'view', 'embed' ),
 				),
 			),
