@@ -26,7 +26,6 @@ export { default as BlockNavigationDropdown } from './block-navigation/dropdown'
 export { default as __experimentalBlockNavigation } from './block-navigation';
 export { BlockNavigationBlockFill as __experimentalBlockNavigationBlockFill } from './block-navigation/block-slot';
 export { default as __experimentalBlockNavigationEditor } from './block-navigation/editor';
-export { default as __experimentalBlockNavigationTree } from './block-navigation/tree';
 export { default as __experimentalBlockVariationPicker } from './block-variation-picker';
 export { default as __experimentalBlockPatternSetup } from './block-pattern-setup';
 export { default as __experimentalBlockVariationTransforms } from './block-variation-transforms';
