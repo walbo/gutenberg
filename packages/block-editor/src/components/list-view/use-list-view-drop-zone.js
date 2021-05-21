@@ -87,7 +87,7 @@ const ALLOWED_DROP_EDGES = [ 'top', 'bottom' ];
 /**
  * Given blocks data and the cursor position, compute the drop target.
  *
- * @param {WPListViewDropZoneBlocks} blocksData Data about the blocks in block navigation.
+ * @param {WPListViewDropZoneBlocks} blocksData Data about the blocks in list view.
  * @param {WPPoint} position The point representing the cursor position when dragging.
  *
  * @return {WPListViewDropZoneTarget} An object containing data about the drop target.
@@ -143,7 +143,7 @@ function getListViewDropTarget( blocksData, position ) {
 			// as the user would intend to drop either before or after
 			// this block.
 			//
-			// This solves an issue where some rows in the block navigation
+			// This solves an issue where some rows in the list view
 			// tree overlap slightly due to sub-pixel rendering.
 			if ( isCursorWithinBlock ) {
 				break;
@@ -190,7 +190,7 @@ function getListViewDropTarget( blocksData, position ) {
 }
 
 /**
- * A react hook for implementing a drop zone in block navigation.
+ * A react hook for implementing a drop zone in list view.
  *
  * @return {WPListViewDropZoneTarget} The drop target.
  */
