@@ -115,6 +115,7 @@ export function useRichText( {
 	 * @param {Object} newRecord The record to sync and apply.
 	 */
 	function handleChange( newRecord ) {
+		record.current = newRecord;
 		applyRecord( newRecord );
 
 		if ( disableFormats ) {
@@ -129,8 +130,6 @@ export function useRichText( {
 				preserveWhiteSpace,
 			} );
 		}
-
-		record.current = newRecord;
 
 		const { start, end, formats, text } = newRecord;
 
