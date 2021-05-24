@@ -187,8 +187,11 @@ function Iframe( { contentRef, children, head, ...props }, ref ) {
 				contentRef.current = body;
 			}
 
+			if ( ! window.__disableEventBubbling ) {
+				bubbleEvents( contentDocument );
+			}
+
 			setBodyClassName( contentDocument );
-			bubbleEvents( contentDocument );
 			setBodyClassName( contentDocument );
 			setIframeDocument( contentDocument );
 			clearerRef( documentElement );
