@@ -225,7 +225,7 @@ export const getRawEntityRecord = createSelector(
 			}, {} )
 		);
 	},
-	( state ) => [ state.entities.data ]
+	( state, kind, name ) => [ get( state.entities.data, [ kind, name ] ) ]
 );
 
 /**
@@ -362,7 +362,10 @@ export const getEntityRecordNonTransientEdits = createSelector(
 			return acc;
 		}, {} );
 	},
-	( state ) => [ state.entities.config, state.entities.data ]
+	( state, kind, name ) => [
+		state.entities.config,
+		[ get( state.entities.data, [ kind, name ] ) ],
+	]
 );
 
 /**
@@ -400,7 +403,7 @@ export const getEditedEntityRecord = createSelector(
 		...getRawEntityRecord( state, kind, name, recordId ),
 		...getEntityRecordEdits( state, kind, name, recordId ),
 	} ),
-	( state ) => [ state.entities.data ]
+	( state, kind, name ) => [ get( state.entities.data, [ kind, name ] ) ]
 );
 
 /**
@@ -733,7 +736,12 @@ export function __experimentalGetTemplateForLink( state, link ) {
 
 	const template = records?.length ? records[ 0 ] : null;
 	if ( template ) {
-		return getEntityRecord( state, 'postType', 'wp_template', template.id );
+		return getEditedEntityRecord(
+			state,
+			'postType',
+			'wp_template',
+			template.id
+		);
 	}
 	return template;
 }
