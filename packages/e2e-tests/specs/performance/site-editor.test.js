@@ -79,9 +79,6 @@ describe( 'Site Editor Performance', () => {
 		while ( i-- ) {
 			const startTime = new Date();
 			await page.reload();
-			await page.evaluate( () => {
-				window.__disableEventBubbling = true;
-			} );
 			await page.waitForSelector( '.edit-site-visual-editor', {
 				timeout: 120000,
 			} );

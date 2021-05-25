@@ -15,7 +15,7 @@ export function deleteFile( filePath ) {
 	}
 }
 
-function isKeyEvent( item ) {
+function isEvent( item ) {
 	return (
 		item.cat === 'devtools.timeline' &&
 		item.name === 'EventDispatch' &&
@@ -25,32 +25,36 @@ function isKeyEvent( item ) {
 	);
 }
 
-function isKeyDownEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'keydown';
+function isKeyDownEvent( item, index, array ) {
+	const isBubbled =
+		array[ index - 1 ]?.args?.data?.functionName === 'bubbleEvent';
+	return isEvent( item ) && item.args.data.type === 'keydown' && ! isBubbled;
 }
 
-function isKeyPressEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'keypress';
+function isKeyPressEvent( item, index, array ) {
+	const isBubbled =
+		array[ index - 1 ]?.args?.data?.functionName === 'bubbleEvent';
+	return isEvent( item ) && item.args.data.type === 'keypress' && ! isBubbled;
 }
 
 function isKeyUpEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'keyup';
+	return isEvent( item ) && item.args.data.type === 'keyup';
 }
 
 function isFocusEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'focus';
+	return isEvent( item ) && item.args.data.type === 'focus';
 }
 
 function isClickEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'click';
+	return isEvent( item ) && item.args.data.type === 'click';
 }
 
 function isMouseOverEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'mouseover';
+	return isEvent( item ) && item.args.data.type === 'mouseover';
 }
 
 function isMouseOutEvent( item ) {
-	return isKeyEvent( item ) && item.args.data.type === 'mouseout';
+	return isEvent( item ) && item.args.data.type === 'mouseout';
 }
 
 function getEventDurationsForType( trace, filterFunction ) {
