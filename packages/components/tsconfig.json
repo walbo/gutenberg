@@ -17,6 +17,7 @@
 		{ "path": "../warning" }
 	],
 	"include": [
+		"src/accessible-popover/**/*",
 		"src/animate/**/*",
 		"src/base-control/**/*",
 		"src/dashicon/**/*",
