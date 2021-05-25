@@ -28,15 +28,33 @@ class PerformanceReporter {
 		}
 
 		const results = readFileSync( filepath, 'utf8' );
-		const { load, type, focus, inserterOpen, inserterHover } = JSON.parse(
-			results
-		);
+		const {
+			firstPaint,
+			domContentLoaded,
+			firstContentfulPaint,
+			blockLoaded,
+			type,
+			focus,
+			inserterOpen,
+			inserterHover,
+		} = JSON.parse( results );
 
-		if ( load && load.length ) {
+		if ( blockLoaded && blockLoaded.length ) {
 			// eslint-disable-next-line no-console
 			console.log( `
 ${ title( 'Loading Time:' ) }
-Average time to load: ${ success( round( average( load ) ) + 'ms' ) }` );
+Average time to first paint: ${ success(
+				round( average( firstPaint ) ) + 'ms'
+			) }
+Average time to dom content load: ${ success(
+				round( average( domContentLoaded ) ) + 'ms'
+			) }
+Average time to first contentful paint: ${ success(
+				round( average( firstContentfulPaint ) ) + 'ms'
+			) }
+Average time to first block: ${ success(
+				round( average( blockLoaded ) ) + 'ms'
+			) }` );
 		}
 
 		if ( type && type.length ) {

@@ -17,6 +17,7 @@ import {
  * Internal dependencies
  */
 import { siteEditor } from '../../experimental-features';
+import { readFile, deleteFile, getLoadTimestamps } from './utils';
 
 jest.setTimeout( 1000000 );
 
@@ -35,7 +36,10 @@ describe( 'Site Editor Performance', () => {
 
 	it( 'Loading', async () => {
 		const results = {
-			load: [],
+			firstPaint: [],
+			domContentLoaded: [],
+			firstContentfulPaint: [],
+			blockLoaded: [],
 			type: [],
 			focus: [],
 			inserterOpen: [],
@@ -46,16 +50,34 @@ describe( 'Site Editor Performance', () => {
 
 		let i = 3;
 
+		const traceFile = __dirname + '/trace.json';
+		let traceResults;
+
 		// Measuring loading time
 		while ( i-- ) {
+			await page.tracing.start( {
+				path: traceFile,
+				screenshots: false,
+			} );
 			const startTime = new Date();
 			await page.reload();
 			await page.waitForSelector( '.edit-site-visual-editor', {
 				timeout: 120000,
 			} );
 			await canvas().waitForSelector( '.wp-block', { timeout: 120000 } );
+			const blockLoaded = new Date() - startTime;
+			await page.tracing.stop();
+			traceResults = JSON.parse( readFile( traceFile ) );
+			const {
+				firstPaint,
+				domContentLoaded,
+				firstContentfulPaint,
+			} = getLoadTimestamps( traceResults, await page.url() );
 
-			results.load.push( new Date() - startTime );
+			results.firstPaint.push( firstPaint );
+			results.domContentLoaded.push( domContentLoaded );
+			results.firstContentfulPaint.push( firstContentfulPaint );
+			results.blockLoaded.push( blockLoaded );
 		}
 
 		const resultsFilename = basename( __filename, '.js' ) + '.results.json';
@@ -64,6 +86,8 @@ describe( 'Site Editor Performance', () => {
 			join( __dirname, resultsFilename ),
 			JSON.stringify( results, null, 2 )
 		);
+
+		deleteFile( traceFile );
 
 		expect( true ).toBe( true );
 	} );
