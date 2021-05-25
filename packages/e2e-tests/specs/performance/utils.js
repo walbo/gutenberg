@@ -25,16 +25,12 @@ function isEvent( item ) {
 	);
 }
 
-function isKeyDownEvent( item, index, array ) {
-	const isBubbled =
-		array[ index - 1 ]?.args?.data?.functionName === 'bubbleEvent';
-	return isEvent( item ) && item.args.data.type === 'keydown' && ! isBubbled;
+function isKeyDownEvent( item ) {
+	return isEvent( item ) && item.args.data.type === 'keydown';
 }
 
-function isKeyPressEvent( item, index, array ) {
-	const isBubbled =
-		array[ index - 1 ]?.args?.data?.functionName === 'bubbleEvent';
-	return isEvent( item ) && item.args.data.type === 'keypress' && ! isBubbled;
+function isKeyPressEvent( item ) {
+	return isEvent( item ) && item.args.data.type === 'keypress';
 }
 
 function isKeyUpEvent( item ) {

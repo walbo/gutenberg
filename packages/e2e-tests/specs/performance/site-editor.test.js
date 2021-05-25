@@ -110,14 +110,21 @@ describe( 'Site Editor Performance', () => {
 			keyUpEvents,
 		] = getTypingEventDurations( traceResults );
 
+		const _keyDownEvents = keyDownEvents.filter(
+			( v, ii ) => ii % 2 === 0
+		);
+		const _keyPressEvents = keyPressEvents.filter(
+			( v, ii ) => ii % 2 === 0
+		);
+
 		expect(
-			keyDownEvents.length === keyPressEvents.length &&
-				keyPressEvents.length === keyUpEvents.length
+			_keyDownEvents.length === _keyPressEvents.length &&
+				_keyPressEvents.length === keyUpEvents.length
 		).toBe( true );
 
-		for ( let j = 0; j < keyDownEvents.length; j++ ) {
+		for ( let j = 0; j < _keyDownEvents.length; j++ ) {
 			results.type.push(
-				keyDownEvents[ j ] + keyPressEvents[ j ] + keyUpEvents[ j ]
+				_keyDownEvents[ j ] + _keyPressEvents[ j ] + keyUpEvents[ j ]
 			);
 		}
 
