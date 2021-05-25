@@ -226,20 +226,10 @@ export const getRawEntityRecord = createSelector(
 		);
 	},
 	( state, kind, name, recordId ) => [
-		get( state.entities.data, [
-			kind,
-			name,
-			'queriedData',
-			'items',
-			recordId,
-		] ),
-		get( state.entities.data, [
-			kind,
-			name,
-			'queriedData',
-			'itemIsComplete',
-			recordId,
-		] ),
+		state.entities.data[ kind ]?.[ name ]?.queriedData?.items?.[ recordId ],
+		state.entities.data[ kind ]?.[ name ]?.queriedData?.itemIsComplete?.[
+			recordId
+		],
 	]
 );
 
@@ -379,7 +369,7 @@ export const getEntityRecordNonTransientEdits = createSelector(
 	},
 	( state, kind, name, recordId ) => [
 		state.entities.config,
-		get( state.entities.data, [ kind, name, 'edits', recordId ] ),
+		state.entities.data[ kind ]?.[ name ]?.edits?.[ recordId ],
 	]
 );
 
@@ -419,21 +409,11 @@ export const getEditedEntityRecord = createSelector(
 		...getEntityRecordEdits( state, kind, name, recordId ),
 	} ),
 	( state, kind, name, recordId ) => [
-		get( state.entities.data, [
-			kind,
-			name,
-			'queriedData',
-			'items',
-			recordId,
-		] ),
-		get( state.entities.data, [
-			kind,
-			name,
-			'queriedData',
-			'itemIsComplete',
-			recordId,
-		] ),
-		get( state.entities.data, [ kind, name, 'edits', recordId ] ),
+		state.entities.data[ kind ]?.[ name ]?.queriedData?.items?.[ recordId ],
+		state.entities.data[ kind ]?.[ name ]?.queriedData?.itemIsComplete?.[
+			recordId
+		],
+		state.entities.data[ kind ]?.[ name ]?.edits?.[ recordId ],
 	]
 );
 
