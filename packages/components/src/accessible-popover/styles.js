@@ -6,9 +6,9 @@ import { css } from 'emotion';
 /**
  * Internal dependencies
  */
-import { CardBody } from '../card';
-import * as ZIndex from '../../utils/z-index';
-import CONFIG from '../../utils/config-values';
+import { CardBody } from '../ui/card';
+import * as ZIndex from '../utils/z-index';
+import CONFIG from '../utils/config-values';
 
 export const PopoverContent = css`
 	z-index: ${ ZIndex.Popover };

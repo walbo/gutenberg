@@ -7,7 +7,8 @@ import useResizeAware from 'react-resize-aware';
 /**
  * Internal dependencies
  */
-import { useIsomorphicLayoutEffect } from '../utils';
+// TODO: use the version from `@wordpress/compose`
+import { useIsomorphicLayoutEffect } from '../ui/utils';
 
 export function usePopoverResizeUpdater( { onResize = noop } ) {
 	const [ resizeListener, sizes ] = useResizeAware();
