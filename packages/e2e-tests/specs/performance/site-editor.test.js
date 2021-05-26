@@ -110,6 +110,9 @@ describe( 'Site Editor Performance', () => {
 			keyUpEvents,
 		] = getTypingEventDurations( traceResults );
 
+		// Both keydown and keypress events are bubbled from the iframe to the
+		// main frame, which must be ignored. These will be the odd values in
+		// the array.
 		const _keyDownEvents = keyDownEvents.filter(
 			( v, ii ) => ii % 2 === 0
 		);
