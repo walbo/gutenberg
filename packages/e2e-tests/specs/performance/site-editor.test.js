@@ -36,7 +36,7 @@ describe( 'Site Editor Performance', () => {
 
 	it( 'Loading', async () => {
 		const results = {
-			firstByte: [],
+			responseEnd: [],
 			firstPaint: [],
 			domContentLoaded: [],
 			loaded: [],
@@ -60,7 +60,7 @@ describe( 'Site Editor Performance', () => {
 			} );
 			await canvas().waitForSelector( '.wp-block', { timeout: 120000 } );
 			const {
-				firstByte,
+				responseEnd,
 				firstPaint,
 				domContentLoaded,
 				loaded,
@@ -68,7 +68,7 @@ describe( 'Site Editor Performance', () => {
 				firstBlock,
 			} = await getLoadingDurations();
 
-			results.firstByte.push( firstByte );
+			results.responseEnd.push( responseEnd );
 			results.firstPaint.push( firstPaint );
 			results.domContentLoaded.push( domContentLoaded );
 			results.loaded.push( loaded );

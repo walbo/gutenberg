@@ -85,11 +85,11 @@ export function getHoverEventDurations( trace ) {
 export async function getLoadingDurations() {
 	return await page.evaluate( () => {
 		const [
-			{ responseStart, domContentLoadedEventEnd, loadEventEnd },
+			{ responseEnd, domContentLoadedEventEnd, loadEventEnd },
 		] = performance.getEntriesByType( 'navigation' );
 		const paintTimings = performance.getEntriesByType( 'paint' );
 		return {
-			firstByte: responseStart,
+			responseEnd,
 			firstPaint: paintTimings.find(
 				( { name } ) => name === 'first-paint'
 			).startTime,

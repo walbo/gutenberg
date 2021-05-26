@@ -33,7 +33,7 @@ jest.setTimeout( 1000000 );
 describe( 'Post Editor Performance', () => {
 	it( 'Loading, typing and selecting blocks', async () => {
 		const results = {
-			firstByte: [],
+			responseEnd: [],
 			firstPaint: [],
 			domContentLoaded: [],
 			loaded: [],
@@ -73,7 +73,7 @@ describe( 'Post Editor Performance', () => {
 			await page.reload();
 			await page.waitForSelector( '.wp-block' );
 			const {
-				firstByte,
+				responseEnd,
 				firstPaint,
 				domContentLoaded,
 				loaded,
@@ -81,7 +81,7 @@ describe( 'Post Editor Performance', () => {
 				firstBlock,
 			} = await getLoadingDurations();
 
-			results.firstByte.push( firstByte );
+			results.responseEnd.push( responseEnd );
 			results.firstPaint.push( firstPaint );
 			results.domContentLoaded.push( domContentLoaded );
 			results.loaded.push( loaded );

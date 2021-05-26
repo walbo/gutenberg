@@ -29,7 +29,7 @@ class PerformanceReporter {
 
 		const results = readFileSync( filepath, 'utf8' );
 		const {
-			firstByte,
+			responseEnd,
 			firstPaint,
 			domContentLoaded,
 			loaded,
@@ -41,11 +41,13 @@ class PerformanceReporter {
 			inserterHover,
 		} = JSON.parse( results );
 
-		if ( firstByte && firstByte.length ) {
+		if ( responseEnd && responseEnd.length ) {
 			// eslint-disable-next-line no-console
 			console.log( `
 ${ title( 'Loading Time:' ) }
-Average time to first byte: ${ success( round( average( firstByte ) ) + 'ms' ) }
+Average time to response end: ${ success(
+				round( average( responseEnd ) ) + 'ms'
+			) }
 Average time to first paint: ${ success(
 				round( average( firstPaint ) ) + 'ms'
 			) }
