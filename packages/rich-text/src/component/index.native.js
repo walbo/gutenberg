@@ -813,6 +813,10 @@ export class RichText extends Component {
 				this.props.selectionEnd || 0
 			);
 		} else if ( ! isSelected && prevIsSelected ) {
+			// Aztec might not be in a state to handle the blur event correctly.
+			// To make sure the blur happens we need to call focus.
+			// @TODO check if this is a known issue with React Native
+			this._editor.focus();
 			this._editor.blur();
 		}
 	}

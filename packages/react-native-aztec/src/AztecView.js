@@ -197,13 +197,16 @@ class AztecView extends Component {
 		}
 	}
 
-	_onAztecFocus( event ) {
+	_onAztecFocus( /*event */ ) {
 		// IMPORTANT: the onFocus events from Aztec are thrown away on Android as these are handled by onPress() in the upper level.
 		// It's necessary to do this otherwise onFocus may be set by `{...otherProps}` and thus the onPress + onFocus
 		// combination generate an infinite loop as described in https://github.com/wordpress-mobile/gutenberg-mobile/issues/302
 		// For iOS, this is necessary to let the system know when Aztec was focused programatically.
+
+		// NOTE: bubbling up the even is causing infinite loops when inserting RichText blocks in the block editor.
 		if ( Platform.OS === 'ios' ) {
-			this._onPress( event );
+			// @TODO - still need to unwind the various callbacks if this proves out to be a good solution to the focus loop
+			//this._onPress( event );
 		}
 	}
 
