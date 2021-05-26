@@ -9,6 +9,7 @@ import {
 	Platform,
 } from 'react-native';
 import TextInputState from 'react-native/Libraries/Components/TextInput/TextInputState';
+
 /**
  * WordPress dependencies
  */
@@ -178,6 +179,11 @@ class AztecView extends Component {
 	}
 
 	blur() {
+		if ( Platform.OS === 'ios' ) {
+			UIManager.blur( findNodeHandle( this ) );
+			return;
+		}
+
 		TextInputState.blurTextInput( findNodeHandle( this ) );
 	}
 
@@ -197,7 +203,7 @@ class AztecView extends Component {
 		}
 	}
 
-	_onAztecFocus( /*event */ ) {
+	_onAztecFocus(/*event */) {
 		// IMPORTANT: the onFocus events from Aztec are thrown away on Android as these are handled by onPress() in the upper level.
 		// It's necessary to do this otherwise onFocus may be set by `{...otherProps}` and thus the onPress + onFocus
 		// combination generate an infinite loop as described in https://github.com/wordpress-mobile/gutenberg-mobile/issues/302
