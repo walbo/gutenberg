@@ -17,7 +17,7 @@ import {
  * Internal dependencies
  */
 import { siteEditor } from '../../experimental-features';
-import { readFile, deleteFile, getLoadTimestamps } from './utils';
+import { getLoadingDurations } from './utils';
 
 jest.setTimeout( 1000000 );
 
@@ -36,10 +36,11 @@ describe( 'Site Editor Performance', () => {
 
 	it( 'Loading', async () => {
 		const results = {
+			firstByte: [],
 			firstPaint: [],
-			domContentLoaded: [],
+			loaded: [],
 			firstContentfulPaint: [],
-			blockLoaded: [],
+			firstBlock: [],
 			type: [],
 			focus: [],
 			inserterOpen: [],
@@ -50,34 +51,26 @@ describe( 'Site Editor Performance', () => {
 
 		let i = 3;
 
-		const traceFile = __dirname + '/trace.json';
-		let traceResults;
-
 		// Measuring loading time
 		while ( i-- ) {
-			await page.tracing.start( {
-				path: traceFile,
-				screenshots: false,
-			} );
-			const startTime = new Date();
 			await page.reload();
 			await page.waitForSelector( '.edit-site-visual-editor', {
 				timeout: 120000,
 			} );
 			await canvas().waitForSelector( '.wp-block', { timeout: 120000 } );
-			const blockLoaded = new Date() - startTime;
-			await page.tracing.stop();
-			traceResults = JSON.parse( readFile( traceFile ) );
 			const {
+				firstByte,
 				firstPaint,
-				domContentLoaded,
+				loaded,
 				firstContentfulPaint,
-			} = getLoadTimestamps( traceResults, await page.url() );
+				firstBlock,
+			} = await getLoadingDurations();
 
+			results.firstByte.push( firstByte );
 			results.firstPaint.push( firstPaint );
-			results.domContentLoaded.push( domContentLoaded );
+			results.loaded.push( loaded );
 			results.firstContentfulPaint.push( firstContentfulPaint );
-			results.blockLoaded.push( blockLoaded );
+			results.firstBlock.push( firstBlock );
 		}
 
 		const resultsFilename = basename( __filename, '.js' ) + '.results.json';
@@ -86,8 +79,6 @@ describe( 'Site Editor Performance', () => {
 			join( __dirname, resultsFilename ),
 			JSON.stringify( results, null, 2 )
 		);
-
-		deleteFile( traceFile );
 
 		expect( true ).toBe( true );
 	} );

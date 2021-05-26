@@ -21,11 +21,11 @@ import {
 import {
 	readFile,
 	deleteFile,
-	getLoadTimestamps,
 	getClickEventDurations,
 	getHoverEventDurations,
 	getTypingEventDurations,
 	getSelectionEventDurations,
+	getLoadingDurations,
 } from './utils';
 
 jest.setTimeout( 1000000 );
@@ -33,10 +33,11 @@ jest.setTimeout( 1000000 );
 describe( 'Post Editor Performance', () => {
 	it( 'Loading, typing and selecting blocks', async () => {
 		const results = {
+			firstByte: [],
 			firstPaint: [],
-			domContentLoaded: [],
+			loaded: [],
 			firstContentfulPaint: [],
-			blockLoaded: [],
+			firstBlock: [],
 			type: [],
 			focus: [],
 			inserterOpen: [],
@@ -71,26 +72,21 @@ describe( 'Post Editor Performance', () => {
 
 		// Measuring loading time
 		while ( i-- ) {
-			await page.tracing.start( {
-				path: traceFile,
-				screenshots: false,
-			} );
-			const startTime = new Date();
 			await page.reload();
 			await page.waitForSelector( '.wp-block' );
-			const blockLoaded = new Date() - startTime;
-			await page.tracing.stop();
-			traceResults = JSON.parse( readFile( traceFile ) );
 			const {
+				firstByte,
 				firstPaint,
-				domContentLoaded,
+				loaded,
 				firstContentfulPaint,
-			} = getLoadTimestamps( traceResults, await page.url() );
+				firstBlock,
+			} = await getLoadingDurations();
 
+			results.firstByte.push( firstByte );
 			results.firstPaint.push( firstPaint );
-			results.domContentLoaded.push( domContentLoaded );
+			results.loaded.push( loaded );
 			results.firstContentfulPaint.push( firstContentfulPaint );
-			results.blockLoaded.push( blockLoaded );
+			results.firstBlock.push( firstBlock );
 		}
 
 		// Measure time to open inserter

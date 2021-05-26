@@ -29,31 +29,31 @@ class PerformanceReporter {
 
 		const results = readFileSync( filepath, 'utf8' );
 		const {
+			firstByte,
 			firstPaint,
-			domContentLoaded,
+			loaded,
 			firstContentfulPaint,
-			blockLoaded,
+			firstBlock,
 			type,
 			focus,
 			inserterOpen,
 			inserterHover,
 		} = JSON.parse( results );
 
-		if ( blockLoaded && blockLoaded.length ) {
+		if ( firstByte && firstByte.length ) {
 			// eslint-disable-next-line no-console
 			console.log( `
 ${ title( 'Loading Time:' ) }
+Average time to first byte: ${ success( round( average( firstByte ) ) + 'ms' ) }
 Average time to first paint: ${ success(
 				round( average( firstPaint ) ) + 'ms'
 			) }
-Average time to dom content load: ${ success(
-				round( average( domContentLoaded ) ) + 'ms'
-			) }
+Average time to load: ${ success( round( average( loaded ) ) + 'ms' ) }
 Average time to first contentful paint: ${ success(
 				round( average( firstContentfulPaint ) ) + 'ms'
 			) }
 Average time to first block: ${ success(
-				round( average( blockLoaded ) ) + 'ms'
+				round( average( firstBlock ) ) + 'ms'
 			) }` );
 		}
 

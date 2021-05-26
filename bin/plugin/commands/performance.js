@@ -27,7 +27,11 @@ const config = require( '../config' );
 /**
  * @typedef WPRawPerformanceResults
  *
- * @property {number[]} load             Load Time.
+ * @property {number[]} firstByte            Time to first byte.
+ * @property {number[]} firstPaint           Time to first paint.
+ * @property {number[]} loaded               Time to load event.
+ * @property {number[]} firstContentfulPaint Time to first contentful paint.
+ * @property {number[]} firstBlock           Time to first block render.
  * @property {number[]} type             Average type time.
  * @property {number[]} focus            Average block selection time.
  * @property {number[]} inserterOpen     Average time to open global inserter.
@@ -37,7 +41,11 @@ const config = require( '../config' );
 /**
  * @typedef WPPerformanceResults
  *
- * @property {number} load              Load Time.
+ * @property {number} firstByte            Time to first byte.
+ * @property {number} firstPaint           Time to first paint.
+ * @property {number} loaded               Time to load event.
+ * @property {number} firstContentfulPaint Time to first contentful paint.
+ * @property {number} firstBlock           Time to first block render.
  * @property {number} type              Average type time.
  * @property {number} minType           Minium type time.
  * @property {number} maxType           Maximum type time.
@@ -54,7 +62,11 @@ const config = require( '../config' );
 /**
  * @typedef WPFormattedPerformanceResults
  *
- * @property {string=} load              Load Time.
+ * @property {string=} firstByte            Time to first byte.
+ * @property {string=} firstPaint           Time to first paint.
+ * @property {string=} loaded               Time to load event.
+ * @property {string=} firstContentfulPaint Time to first contentful paint.
+ * @property {string=} firstBlock           Time to first block render.
  * @property {string=} type              Average type time.
  * @property {string=} minType           Minium type time.
  * @property {string=} maxType           Maximum type time.
@@ -116,7 +128,11 @@ function formatTime( number ) {
  */
 function curateResults( results ) {
 	return {
-		load: average( results.load ),
+		firstByte: average( results.firstByte ),
+		firstPaint: average( results.firstPaint ),
+		loaded: average( results.loaded ),
+		firstContentfulPaint: average( results.firstContentfulPaint ),
+		firstBlock: average( results.firstBlock ),
 		type: average( results.type ),
 		minType: Math.min( ...results.type ),
 		maxType: Math.max( ...results.type ),
@@ -179,7 +195,13 @@ async function runTestSuite( testSuite, performanceTestDirectory ) {
 
 	const medians = mapValues(
 		{
-			load: results.map( ( r ) => r.load ),
+			firstByte: results.map( ( r ) => r.firstByte ),
+			firstPaint: results.map( ( r ) => r.firstPaint ),
+			loaded: results.map( ( r ) => r.loaded ),
+			firstContentfulPaint: results.map(
+				( r ) => r.firstContentfulPaint
+			),
+			firstBlock: results.map( ( r ) => r.firstBlock ),
 			type: results.map( ( r ) => r.type ),
 			minType: results.map( ( r ) => r.minType ),
 			maxType: results.map( ( r ) => r.maxType ),

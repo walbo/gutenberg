@@ -82,40 +82,22 @@ export function getHoverEventDurations( trace ) {
 	];
 }
 
-export function getLoadTimestamps( { traceEvents }, url ) {
-	const timestamps = {};
-	let item;
-	let requestStart;
-	let requestEnd;
-	let frame;
-
-	while ( ( item = traceEvents.shift() ) ) {
-		const { name, ts: timestampInMicroseconds, args } = item;
-
-		if ( requestEnd ) {
-			// The frame could be an iframe as well.
-			if ( args.frame === frame ) {
-				const relativeTimeInMiliseconds =
-					( timestampInMicroseconds - requestEnd ) / 1000;
-
-				if ( name === 'firstPaint' ) {
-					timestamps.firstPaint = relativeTimeInMiliseconds;
-				} else if ( name === 'firstContentfulPaint' ) {
-					timestamps.firstContentfulPaint = relativeTimeInMiliseconds;
-				} else if ( name === 'domContentLoadedEventEnd' ) {
-					timestamps.domContentLoaded = relativeTimeInMiliseconds;
-				}
-			}
-		} else if ( requestStart && name === 'ResourceReceiveResponse' ) {
-			// Store the time at which the page has been received from the
-			// server. We'll base our relative time on this.
-			requestEnd = timestampInMicroseconds;
-			frame = args.data.frame;
-		} else if ( name === 'ResourceSendRequest' && args.data.url === url ) {
-			// Mark that the request has started.
-			requestStart = true;
-		}
-	}
-
-	return timestamps;
+export async function getLoadingDurations() {
+	return await page.evaluate( () => {
+		const [
+			{ responseStart, loadEventEnd },
+		] = performance.getEntriesByType( 'navigation' );
+		const paintTimings = performance.getEntriesByType( 'paint' );
+		return {
+			firstByte: responseStart,
+			firstPaint: paintTimings.find(
+				( { name } ) => name === 'first-paint'
+			).startTime,
+			loaded: loadEventEnd,
+			firstContentfulPaint: paintTimings.find(
+				( { name } ) => name === 'first-contentful-paint'
+			).startTime,
+			firstBlock: performance.now(),
+		};
+	} );
 }
