@@ -27,7 +27,7 @@ const config = require( '../config' );
 /**
  * @typedef WPRawPerformanceResults
  *
- * @property {number[]} responseEnd          Represents the time immediately after the user agent receives the last byte of the current document.
+ * @property {number[]} serverResponse       Represents the time the server takes to respond.
  * @property {number[]} firstPaint           Represents the time when the user agent first rendered after navigation.
  * @property {number[]} domContentLoaded     Represents the time immediately after the document's DOMContentLoaded event completes.
  * @property {number[]} loaded               Represents the time when the load event of the current document is completed.
@@ -42,7 +42,7 @@ const config = require( '../config' );
 /**
  * @typedef WPPerformanceResults
  *
- * @property {number} responseEnd          Represents the time immediately after the user agent receives the last byte of the current document.
+ * @property {number} serverResponse       Represents the time the server takes to respond.
  * @property {number} firstPaint           Represents the time when the user agent first rendered after navigation.
  * @property {number} domContentLoaded     Represents the time immediately after the document's DOMContentLoaded event completes.
  * @property {number} loaded               Represents the time when the load event of the current document is completed.
@@ -64,7 +64,7 @@ const config = require( '../config' );
 /**
  * @typedef WPFormattedPerformanceResults
  *
- * @property {string=} responseEnd          Represents the time immediately after the user agent receives the last byte of the current document.
+ * @property {string=} serverResponse       Represents the time the server takes to respond.
  * @property {string=} firstPaint           Represents the time when the user agent first rendered after navigation.
  * @property {string=} domContentLoaded     Represents the time immediately after the document's DOMContentLoaded event completes.
  * @property {string=} loaded               Represents the time when the load event of the current document is completed.
@@ -131,7 +131,7 @@ function formatTime( number ) {
  */
 function curateResults( results ) {
 	return {
-		responseEnd: average( results.responseEnd ),
+		serverResponse: average( results.serverResponse ),
 		firstPaint: average( results.firstPaint ),
 		domContentLoaded: average( results.domContentLoaded ),
 		loaded: average( results.loaded ),
@@ -199,7 +199,7 @@ async function runTestSuite( testSuite, performanceTestDirectory ) {
 
 	const medians = mapValues(
 		{
-			responseEnd: results.map( ( r ) => r.responseEnd ),
+			serverResponse: results.map( ( r ) => r.serverResponse ),
 			firstPaint: results.map( ( r ) => r.firstPaint ),
 			domContentLoaded: results.map( ( r ) => r.domContentLoaded ),
 			loaded: results.map( ( r ) => r.loaded ),
@@ -319,6 +319,11 @@ async function runPerformanceTests( branches, options ) {
 	await runShellScript( 'npm run wp-env stop', environmentDirectory );
 
 	log( '\n>> 🎉 Results.\n' );
+
+	log(
+		'\nPlease note that client side metrics EXCLUDE the server response time.\n'
+	);
+
 	for ( const testSuite of testSuites ) {
 		log( `\n>> ${ testSuite }\n` );
 

@@ -85,20 +85,31 @@ export function getHoverEventDurations( trace ) {
 export async function getLoadingDurations() {
 	return await page.evaluate( () => {
 		const [
-			{ responseEnd, domContentLoadedEventEnd, loadEventEnd },
+			{
+				requestStart,
+				responseStart,
+				responseEnd,
+				domContentLoadedEventEnd,
+				loadEventEnd,
+			},
 		] = performance.getEntriesByType( 'navigation' );
 		const paintTimings = performance.getEntriesByType( 'paint' );
 		return {
-			responseEnd,
-			firstPaint: paintTimings.find(
-				( { name } ) => name === 'first-paint'
-			).startTime,
-			domContentLoaded: domContentLoadedEventEnd,
-			loaded: loadEventEnd,
-			firstContentfulPaint: paintTimings.find(
-				( { name } ) => name === 'first-contentful-paint'
-			).startTime,
-			firstBlock: performance.now(),
+			// Server side metric.
+			serverResponse: responseStart - requestStart,
+			// For client side metrics, consider the end of the response (the
+			// browser receives the HTML) as the start time (0).
+			firstPaint:
+				paintTimings.find( ( { name } ) => name === 'first-paint' )
+					.startTime - responseEnd,
+			domContentLoaded: domContentLoadedEventEnd - responseEnd,
+			loaded: loadEventEnd - responseEnd,
+			firstContentfulPaint:
+				paintTimings.find(
+					( { name } ) => name === 'first-contentful-paint'
+				).startTime - responseEnd,
+			// This is evaluated right after Puppeteer found the block selector.
+			firstBlock: performance.now() - responseEnd,
 		};
 	} );
 }
