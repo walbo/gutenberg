@@ -27,11 +27,12 @@ const config = require( '../config' );
 /**
  * @typedef WPRawPerformanceResults
  *
- * @property {number[]} firstByte            Time to first byte.
- * @property {number[]} firstPaint           Time to first paint.
- * @property {number[]} loaded               Time to load event.
- * @property {number[]} firstContentfulPaint Time to first contentful paint.
- * @property {number[]} firstBlock           Time to first block render.
+ * @property {number[]} firstByte            Represents the time immediately after the user agent's HTTP parser receives the first byte of the response
+ * @property {number[]} firstPaint           Represents the time when the user agent first rendered after navigation.
+ * @property {number[]} domContentLoaded     Represents the time immediately after the document's DOMContentLoaded event completes.
+ * @property {number[]} loaded               Represents the time when the load event of the current document is completed.
+ * @property {number[]} firstContentfulPaint Represents the time when the browser first renders any text or media.
+ * @property {number[]} firstBlock           Represents the time when Puppeteer first sees a block selector in the DOM.
  * @property {number[]} type             Average type time.
  * @property {number[]} focus            Average block selection time.
  * @property {number[]} inserterOpen     Average time to open global inserter.
@@ -41,11 +42,12 @@ const config = require( '../config' );
 /**
  * @typedef WPPerformanceResults
  *
- * @property {number} firstByte            Time to first byte.
- * @property {number} firstPaint           Time to first paint.
- * @property {number} loaded               Time to load event.
- * @property {number} firstContentfulPaint Time to first contentful paint.
- * @property {number} firstBlock           Time to first block render.
+ * @property {number} firstByte            Represents the time immediately after the user agent's HTTP parser receives the first byte of the response
+ * @property {number} firstPaint           Represents the time when the user agent first rendered after navigation.
+ * @property {number} domContentLoaded     Represents the time immediately after the document's DOMContentLoaded event completes.
+ * @property {number} loaded               Represents the time when the load event of the current document is completed.
+ * @property {number} firstContentfulPaint Represents the time when the browser first renders any text or media.
+ * @property {number} firstBlock           Represents the time when Puppeteer first sees a block selector in the DOM.
  * @property {number} type              Average type time.
  * @property {number} minType           Minium type time.
  * @property {number} maxType           Maximum type time.
@@ -62,11 +64,12 @@ const config = require( '../config' );
 /**
  * @typedef WPFormattedPerformanceResults
  *
- * @property {string=} firstByte            Time to first byte.
- * @property {string=} firstPaint           Time to first paint.
- * @property {string=} loaded               Time to load event.
- * @property {string=} firstContentfulPaint Time to first contentful paint.
- * @property {string=} firstBlock           Time to first block render.
+ * @property {string=} firstByte            Represents the time immediately after the user agent's HTTP parser receives the first byte of the response
+ * @property {string=} firstPaint           Represents the time when the user agent first rendered after navigation.
+ * @property {string=} domContentLoaded     Represents the time immediately after the document's DOMContentLoaded event completes.
+ * @property {string=} loaded               Represents the time when the load event of the current document is completed.
+ * @property {string=} firstContentfulPaint Represents the time when the browser first renders any text or media.
+ * @property {string=} firstBlock           Represents the time when Puppeteer first sees a block selector in the DOM.
  * @property {string=} type              Average type time.
  * @property {string=} minType           Minium type time.
  * @property {string=} maxType           Maximum type time.
@@ -130,6 +133,7 @@ function curateResults( results ) {
 	return {
 		firstByte: average( results.firstByte ),
 		firstPaint: average( results.firstPaint ),
+		domContentLoaded: average( results.domContentLoaded ),
 		loaded: average( results.loaded ),
 		firstContentfulPaint: average( results.firstContentfulPaint ),
 		firstBlock: average( results.firstBlock ),
@@ -197,6 +201,7 @@ async function runTestSuite( testSuite, performanceTestDirectory ) {
 		{
 			firstByte: results.map( ( r ) => r.firstByte ),
 			firstPaint: results.map( ( r ) => r.firstPaint ),
+			domContentLoaded: results.map( ( r ) => r.domContentLoaded ),
 			loaded: results.map( ( r ) => r.loaded ),
 			firstContentfulPaint: results.map(
 				( r ) => r.firstContentfulPaint

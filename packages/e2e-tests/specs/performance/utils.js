@@ -85,7 +85,7 @@ export function getHoverEventDurations( trace ) {
 export async function getLoadingDurations() {
 	return await page.evaluate( () => {
 		const [
-			{ responseStart, loadEventEnd },
+			{ responseStart, domContentLoadedEventEnd, loadEventEnd },
 		] = performance.getEntriesByType( 'navigation' );
 		const paintTimings = performance.getEntriesByType( 'paint' );
 		return {
@@ -93,6 +93,7 @@ export async function getLoadingDurations() {
 			firstPaint: paintTimings.find(
 				( { name } ) => name === 'first-paint'
 			).startTime,
+			domContentLoaded: domContentLoadedEventEnd,
 			loaded: loadEventEnd,
 			firstContentfulPaint: paintTimings.find(
 				( { name } ) => name === 'first-contentful-paint'

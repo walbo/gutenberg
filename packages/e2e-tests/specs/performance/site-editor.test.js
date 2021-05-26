@@ -38,6 +38,7 @@ describe( 'Site Editor Performance', () => {
 		const results = {
 			firstByte: [],
 			firstPaint: [],
+			domContentLoaded: [],
 			loaded: [],
 			firstContentfulPaint: [],
 			firstBlock: [],
@@ -61,6 +62,7 @@ describe( 'Site Editor Performance', () => {
 			const {
 				firstByte,
 				firstPaint,
+				domContentLoaded,
 				loaded,
 				firstContentfulPaint,
 				firstBlock,
@@ -68,6 +70,7 @@ describe( 'Site Editor Performance', () => {
 
 			results.firstByte.push( firstByte );
 			results.firstPaint.push( firstPaint );
+			results.domContentLoaded.push( domContentLoaded );
 			results.loaded.push( loaded );
 			results.firstContentfulPaint.push( firstContentfulPaint );
 			results.firstBlock.push( firstBlock );

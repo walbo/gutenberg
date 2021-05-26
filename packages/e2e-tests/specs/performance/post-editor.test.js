@@ -35,6 +35,7 @@ describe( 'Post Editor Performance', () => {
 		const results = {
 			firstByte: [],
 			firstPaint: [],
+			domContentLoaded: [],
 			loaded: [],
 			firstContentfulPaint: [],
 			firstBlock: [],
@@ -67,9 +68,6 @@ describe( 'Post Editor Performance', () => {
 
 		let i = 5;
 
-		const traceFile = __dirname + '/trace.json';
-		let traceResults;
-
 		// Measuring loading time
 		while ( i-- ) {
 			await page.reload();
@@ -77,6 +75,7 @@ describe( 'Post Editor Performance', () => {
 			const {
 				firstByte,
 				firstPaint,
+				domContentLoaded,
 				loaded,
 				firstContentfulPaint,
 				firstBlock,
@@ -84,6 +83,7 @@ describe( 'Post Editor Performance', () => {
 
 			results.firstByte.push( firstByte );
 			results.firstPaint.push( firstPaint );
+			results.domContentLoaded.push( domContentLoaded );
 			results.loaded.push( loaded );
 			results.firstContentfulPaint.push( firstContentfulPaint );
 			results.firstBlock.push( firstBlock );
@@ -91,6 +91,8 @@ describe( 'Post Editor Performance', () => {
 
 		// Measure time to open inserter
 		await page.waitForSelector( '.edit-post-layout' );
+		const traceFile = __dirname + '/trace.json';
+		let traceResults;
 		for ( let j = 0; j < 10; j++ ) {
 			await page.tracing.start( {
 				path: traceFile,

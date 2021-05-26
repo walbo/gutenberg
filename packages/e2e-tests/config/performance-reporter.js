@@ -31,6 +31,7 @@ class PerformanceReporter {
 		const {
 			firstByte,
 			firstPaint,
+			domContentLoaded,
 			loaded,
 			firstContentfulPaint,
 			firstBlock,
@@ -47,6 +48,9 @@ ${ title( 'Loading Time:' ) }
 Average time to first byte: ${ success( round( average( firstByte ) ) + 'ms' ) }
 Average time to first paint: ${ success(
 				round( average( firstPaint ) ) + 'ms'
+			) }
+Average time to DOM content load: ${ success(
+				round( average( domContentLoaded ) ) + 'ms'
 			) }
 Average time to load: ${ success( round( average( loaded ) ) + 'ms' ) }
 Average time to first contentful paint: ${ success(
