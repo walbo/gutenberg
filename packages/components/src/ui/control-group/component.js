@@ -6,12 +6,12 @@
  * Internal dependencies
  */
 import { Flex } from '../../flex';
-import { Grid } from '../grid';
+import { Grid } from '../../grid';
 import { useControlGroup } from './hook';
 import { contextConnect } from '../context';
 
 /**
- * @param {import('../context').ViewOwnProps<import('./types').Props, 'div'>} props
+ * @param {import('../context').PolymorphicComponentProps<import('./types').Props, 'div'>} props
  * @param {import('react').Ref<any>} forwardedRef
  */
 function ControlGroup( props, forwardedRef ) {

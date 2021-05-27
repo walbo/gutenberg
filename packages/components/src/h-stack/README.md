@@ -1,6 +1,8 @@
 # HStack
 
-> **Experimental!**
+<div class="callout callout-alert">
+This feature is still experimental. “Experimental” means this is an early implementation subject to drastic and breaking changes.
+</div>
 
 `HStack` (Horizontal Stack) arranges child elements in a horizontal line.
 
@@ -12,21 +14,14 @@
 import {
 	__experimentalHStack as HStack,
 	__experimentalText as Text,
-	__experimentalView as View,
 } from '@wordpress/components';
 
 function Example() {
 	return (
 		<HStack>
-			<View>
-				<Text>Code</Text>
-			</View>
-			<View>
-				<Text>is</Text>
-			</View>
-			<View>
-				<Text>Poetry</Text>
-			</View>
+			<Text>Code</Text>
+			<Text>is</Text>
+			<Text>Poetry</Text>
 		</HStack>
 	);
 }
@@ -93,21 +88,16 @@ import {
 	__experimentalHStack as HStack,
 	__experimentalSpacer as Spacer,
 	__experimentalText as Text,
-	__experimentalView as View,
 } from '@wordpress/components';
 
 function Example() {
 	return (
 		<HStack>
-			<View>
-				<Text>Code</Text>
-			</View>
+			<Text>Code</Text>
 			<Spacer>
 				<Text>is</Text>
 			</Spacer>
-			<View>
-				<Text>Poetry</Text>
-			</View>
+			<Text>Poetry</Text>
 		</HStack>
 	);
 }
@@ -120,22 +110,15 @@ import {
 	__experimentalHStack as HStack,
 	__experimentalSpacer as Spacer,
 	__experimentalText as Text,
-	__experimentalView as View,
 } from '@wordpress/components';
 
 function Example() {
 	return (
 		<HStack>
-			<View>
-				<Text>Code</Text>
-			</View>
+			<Text>Code</Text>
 			<Spacer />
-			<View>
-				<Text>is</Text>
-			</View>
-			<View>
-				<Text>Poetry</Text>
-			</View>
+			<Text>is</Text>
+			<Text>Poetry</Text>
 		</HStack>
 	);
 }

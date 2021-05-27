@@ -15,6 +15,7 @@ import {
 } from '@wordpress/element';
 import {
 	__EXPERIMENTAL_STYLE_PROPERTY as STYLE_PROPERTY,
+	__EXPERIMENTAL_ELEMENTS as ELEMENTS,
 	store as blocksStore,
 } from '@wordpress/blocks';
 import { useEntityProp } from '@wordpress/core-data';
@@ -24,7 +25,6 @@ import { useSelect, useDispatch } from '@wordpress/data';
  * Internal dependencies
  */
 import {
-	ELEMENTS,
 	ROOT_BLOCK_NAME,
 	ROOT_BLOCK_SELECTOR,
 	ROOT_BLOCK_SUPPORTS,
@@ -47,7 +47,31 @@ const GlobalStylesContext = createContext( {
 	/* eslint-enable no-unused-vars */
 } );
 
-const mergeTreesCustomizer = ( objValue, srcValue ) => {
+const mergeTreesCustomizer = ( objValue, srcValue, key ) => {
+	// Users can add their own colors.
+	// We want to append them when they don't
+	// have the same slug as an existing color,
+	// otherwise we want to update the existing color instead.
+	if ( 'palette' === key ) {
+		const indexTable = {};
+		const existingSlugs = [];
+		const result = [ ...( objValue ?? [] ) ];
+		result.forEach( ( { slug }, index ) => {
+			indexTable[ slug ] = index;
+			existingSlugs.push( slug );
+		} );
+
+		( srcValue ?? [] ).forEach( ( element ) => {
+			if ( existingSlugs.includes( element?.slug ) ) {
+				result[ indexTable[ element?.slug ] ] = element;
+			} else {
+				result.push( element );
+			}
+		} );
+
+		return result;
+	}
+
 	// We only pass as arrays the presets,
 	// in which case we want the new array of values
 	// to override the old array (no merging).
@@ -87,32 +111,25 @@ const getBlockMetadata = ( blockTypes ) => {
 	blockTypes.forEach( ( blockType ) => {
 		const name = blockType.name;
 		const supports = extractSupportKeys( blockType?.supports );
-		const hasSupport = supports.length > 0;
 
-		if ( hasSupport ) {
-			const selector =
-				blockType?.supports?.__experimentalSelector ??
-				'.wp-block-' + name.replace( 'core/', '' ).replace( '/', '-' );
-
-			const blockSelectors = selector.split( ',' );
-			const elements = [];
-			Object.keys( ELEMENTS ).forEach( ( key ) => {
-				const elementSelector = [];
-				blockSelectors.forEach( ( blockSelector ) => {
-					elementSelector.push(
-						blockSelector + ' ' + ELEMENTS[ key ]
-					);
-				} );
-				elements[ key ] = elementSelector.join( ',' );
+		const selector =
+			blockType?.supports?.__experimentalSelector ??
+			'.wp-block-' + name.replace( 'core/', '' ).replace( '/', '-' );
+		const blockSelectors = selector.split( ',' );
+		const elements = [];
+		Object.keys( ELEMENTS ).forEach( ( key ) => {
+			const elementSelector = [];
+			blockSelectors.forEach( ( blockSelector ) => {
+				elementSelector.push( blockSelector + ' ' + ELEMENTS[ key ] );
 			} );
-
-			result[ name ] = {
-				name,
-				selector,
-				supports,
-				elements,
-			};
-		}
+			elements[ key ] = elementSelector.join( ',' );
+		} );
+		result[ name ] = {
+			name,
+			selector,
+			supports,
+			elements,
+		};
 	} );
 
 	return result;
@@ -205,9 +222,7 @@ export default function GlobalStylesProvider( { children, baseStyles } ) {
 				setContent( JSON.stringify( newContent ) );
 			},
 			getStyle: ( context, propertyName, origin = 'merged' ) => {
-				const propertyPath =
-					STYLE_PROPERTY[ propertyName ].valueGlobal ??
-					STYLE_PROPERTY[ propertyName ].value;
+				const propertyPath = STYLE_PROPERTY[ propertyName ].value;
 				const path =
 					context === ROOT_BLOCK_NAME
 						? propertyPath
@@ -237,9 +252,7 @@ export default function GlobalStylesProvider( { children, baseStyles } ) {
 					ROOT_BLOCK_NAME === context
 						? [ 'styles' ]
 						: [ 'styles', 'blocks', context ];
-				const propertyPath =
-					STYLE_PROPERTY[ propertyName ].valueGlobal ??
-					STYLE_PROPERTY[ propertyName ].value;
+				const propertyPath = STYLE_PROPERTY[ propertyName ].value;
 
 				let newStyles = get( newContent, path );
 				if ( ! newStyles ) {

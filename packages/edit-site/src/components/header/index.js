@@ -5,7 +5,6 @@ import { useRef } from '@wordpress/element';
 import { useViewportMatch } from '@wordpress/compose';
 import {
 	ToolSelector,
-	BlockToolbar,
 	__experimentalPreviewOptions as PreviewOptions,
 } from '@wordpress/block-editor';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -36,7 +35,6 @@ export default function Header( {
 	const {
 		deviceType,
 		entityTitle,
-		hasFixedToolbar,
 		template,
 		templateType,
 		isInserterOpen,
@@ -46,7 +44,6 @@ export default function Header( {
 	} = useSelect( ( select ) => {
 		const {
 			__experimentalGetPreviewDeviceType,
-			isFeatureActive,
 			getEditedPostType,
 			getEditedPostId,
 			isInserterOpened,
@@ -71,7 +68,6 @@ export default function Header( {
 			deviceType: __experimentalGetPreviewDeviceType(),
 			entityTitle: _entityTitle,
 			isLoaded: _isLoaded,
-			hasFixedToolbar: isFeatureActive( 'fixedToolbar' ),
 			template: record,
 			templateType: postType,
 			isInserterOpen: isInserterOpened(),
@@ -89,8 +85,6 @@ export default function Header( {
 	} = useDispatch( editSiteStore );
 
 	const isLargeViewport = useViewportMatch( 'medium' );
-	const displayBlockToolbar =
-		! isLargeViewport || deviceType !== 'Desktop' || hasFixedToolbar;
 
 	return (
 		<div className="edit-site-header">
@@ -98,7 +92,7 @@ export default function Header( {
 				<div className="edit-site-header__toolbar">
 					<Button
 						ref={ inserterButton }
-						isPrimary
+						variant="primary"
 						isPressed={ isInserterOpen }
 						className="edit-site-header-toolbar__inserter-toggle"
 						onMouseDown={ ( event ) => {
@@ -135,11 +129,6 @@ export default function Header( {
 								shortcut={ listViewShortcut }
 							/>
 						</>
-					) }
-					{ displayBlockToolbar && (
-						<div className="edit-site-header-toolbar__block-toolbar">
-							<BlockToolbar hideDragHandle />
-						</div>
 					) }
 				</div>
 			</div>

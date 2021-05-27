@@ -1,6 +1,8 @@
 # VStack
 
-> **Experimental!**
+<div class="callout callout-alert">
+This feature is still experimental. “Experimental” means this is an early implementation subject to drastic and breaking changes.
+</div>
 
 `VStack` (or Vertical Stack) is a layout component that arranges child elements in a vertical line.
 
@@ -11,22 +13,15 @@
 ```jsx
 import {
 	__experimentalText as Text,
-	__experimentalView as View
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 
 function Example() {
 	return (
 		<VStack>
-			<View>
-				<Text>Code</Text>
-			</View>
-			<View>
-				<Text>is</Text>
-			</View>
-			<View>
-				<Text>Poetry</Text>
-			</View>
+			<Text>Code</Text>
+			<Text>is</Text>
+			<Text>Poetry</Text>
 		</VStack>
 	);
 }
@@ -92,22 +87,17 @@ When a `Spacer` is used within an `VStack`, the `Spacer` adaptively expands to t
 import {
 	__experimentalSpacer as Spacer,
 	__experimentalText as Text,
-	__experimentalView as View
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 
 function Example() {
 	return (
 		<VStack>
-			<View>
-				<Text>Code</Text>
-			</View>
+			<Text>Code</Text>
 			<Spacer>
 				<Text>is</Text>
 			</Spacer>
-			<View>
-				<Text>Poetry</Text>
-			</View>
+			<Text>Poetry</Text>
 		</VStack>
 	);
 }
@@ -119,23 +109,16 @@ function Example() {
 import {
 	__experimentalSpacer as Spacer,
 	__experimentalText as Text,
-	__experimentalView as View
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 
 function Example() {
 	return (
 		<VStack>
-			<View>
-				<Text>Code</Text>
-			</View>
+			<Text>Code</Text>
 			<Spacer />
-			<View>
-				<Text>is</Text>
-			</View>
-			<View>
-				<Text>Poetry</Text>
-			</View>
+			<Text>is</Text>
+			<Text>Poetry</Text>
 		</VStack>
 	);
 }
