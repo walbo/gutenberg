@@ -175,79 +175,78 @@ export default function VisualEditor( { styles } ) {
 	);
 
 	return (
-		<div
+		<BlockTools
+			__unstableContentRef={ ref }
 			className={ classnames( 'edit-post-visual-editor', {
 				'is-template-mode': isTemplateMode,
 			} ) }
 		>
 			<VisualEditorGlobalKeyboardShortcuts />
-			<BlockTools __unstableContentRef={ ref }>
-				<motion.div
-					className="edit-post-visual-editor__content-area"
-					animate={ {
-						padding: isTemplateMode ? '48px 48px 0' : '0',
-					} }
-					ref={ blockSelectionClearerRef }
-				>
-					{ isTemplateMode && (
-						<Button
-							className="edit-post-visual-editor__exit-template-mode"
-							icon={ arrowLeft }
-							onClick={ () => {
-								clearSelectedBlock();
-								setIsEditingTemplate( false );
-							} }
-						>
-							{ __( 'Back' ) }
-						</Button>
-					) }
-					<motion.div
-						animate={ animatedStyles }
-						initial={ desktopCanvasStyles }
+			<motion.div
+				className="edit-post-visual-editor__content-area"
+				animate={ {
+					padding: isTemplateMode ? '48px 48px 0' : '0',
+				} }
+				ref={ blockSelectionClearerRef }
+			>
+				{ isTemplateMode && (
+					<Button
+						className="edit-post-visual-editor__exit-template-mode"
+						icon={ arrowLeft }
+						onClick={ () => {
+							clearSelectedBlock();
+							setIsEditingTemplate( false );
+						} }
 					>
-						<MaybeIframe
-							isTemplateMode={ isTemplateMode }
-							contentRef={ contentRef }
-							styles={ styles }
-							style={ { paddingBottom } }
-						>
-							{ themeSupportsLayout && (
-								<LayoutStyle
-									selector=".edit-post-visual-editor__post-title-wrapper, .block-editor-block-list__layout.is-root-container"
-									layout={ defaultLayout }
-								/>
+						{ __( 'Back' ) }
+					</Button>
+				) }
+				<motion.div
+					animate={ animatedStyles }
+					initial={ desktopCanvasStyles }
+				>
+					<MaybeIframe
+						isTemplateMode={ isTemplateMode }
+						contentRef={ contentRef }
+						styles={ styles }
+						style={ { paddingBottom } }
+					>
+						{ themeSupportsLayout && (
+							<LayoutStyle
+								selector=".edit-post-visual-editor__post-title-wrapper, .block-editor-block-list__layout.is-root-container"
+								layout={ defaultLayout }
+							/>
+						) }
+						<WritingFlow>
+							{ ! isTemplateMode && (
+								<div className="edit-post-visual-editor__post-title-wrapper">
+									<PostTitle />
+								</div>
 							) }
-							<WritingFlow>
-								{ ! isTemplateMode && (
-									<div className="edit-post-visual-editor__post-title-wrapper">
-										<PostTitle />
-									</div>
-								) }
-								<RecursionProvider>
-									<BlockList
-										__experimentalLayout={
-											themeSupportsLayout
-												? {
-														type: 'default',
-														// Find a way to inject this in the support flag code (hooks).
-														alignments: themeSupportsLayout
-															? alignments
-															: undefined,
-												  }
-												: undefined
-										}
-									/>
-								</RecursionProvider>
-							</WritingFlow>
-						</MaybeIframe>
-					</motion.div>
+							<RecursionProvider>
+								<BlockList
+									__experimentalLayout={
+										themeSupportsLayout
+											? {
+													type: 'default',
+													// Find a way to inject this in the support flag code (hooks).
+													alignments: themeSupportsLayout
+														? alignments
+														: undefined,
+											  }
+											: undefined
+									}
+								/>
+							</RecursionProvider>
+						</WritingFlow>
+					</MaybeIframe>
 				</motion.div>
-			</BlockTools>
+			</motion.div>
 			<__unstableBlockSettingsMenuFirstItem>
 				{ ( { onClose } ) => (
 					<BlockInspectorButton onClick={ onClose } />
 				) }
 			</__unstableBlockSettingsMenuFirstItem>
-		</div>
+		</BlockTools>
 	);
 }
