@@ -43,7 +43,9 @@ jobs:
             - name: Set branches to current PR's and trunk
               id: get-pull-request-branches
               if: github.event_name == 'pull_request'
-              run: echo "::set-output name=branches::[\"$GITHUB_SHA\",\"trunk\"]"
+              env:
+                  BRANCH: ${{ github.head_ref }}
+              run: echo "::set-output name=branches::[\"$BRANCH\",\"trunk\"]"
 
     performance-tests:
         name: Run performance tests
