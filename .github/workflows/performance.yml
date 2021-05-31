@@ -154,8 +154,8 @@ jobs:
                         for ( branch of branches ) {
                           let result = require( `./${ testSuite }--${ branch }/results.json` );
                           for ( test of Object.keys( result ) ) {
-                            if ( ! results[ test ] ) {
-                              results[ test ] = {};
+                            if ( ! results[ testSuite ][ test ] ) {
+                              results[ testSuite ][ test ] = {};
                             }
                             results[ testSuite ][ test ][ branch ] = result[ test ];
                           }
