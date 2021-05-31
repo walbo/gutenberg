@@ -13,13 +13,60 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    performance:
-        name: Run performance tests
-
+    determine-branches:
+        name: Determine which branches to compare performance for
         runs-on: ubuntu-latest
-
+        outputs:
+            branches: ${{ steps.get-release-branches.outputs.branches || steps.get-pull-request-branches.outputs.branches }}
+            test-suites: '[ "post-editor", "site-editor" ]'
+            wp-version: ${{ steps.get-release-branches.outputs.wp-version }}
         steps:
             - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+
+            - name: Set branches to current WordPress Core plus previous and current Gutenberg versions
+              id: get-release-branches
+              if: github.event_name == 'release'
+              env:
+                  PLUGIN_VERSION: ${{ github.event.release.name }}
+              shell: bash
+              run: |
+                  IFS=. read -ra PLUGIN_VERSION_ARRAY <<< "$PLUGIN_VERSION"
+                  CURRENT_RELEASE_BRANCH="release/${PLUGIN_VERSION_ARRAY[0]}.${PLUGIN_VERSION_ARRAY[1]}"
+                  PREVIOUS_VERSION_BASE_10=$((PLUGIN_VERSION_ARRAY[0] * 10 + PLUGIN_VERSION_ARRAY[1] - 1))
+                  PREVIOUS_RELEASE_BRANCH="release/$((PREVIOUS_VERSION_BASE_10 / 10)).$((PREVIOUS_VERSION_BASE_10 % 10))"
+                  WP_VERSION=$(awk -F ': ' '/^Tested up to/{print $2}' readme.txt)
+                  IFS=. read -ra WP_VERSION_ARRAY <<< "$WP_VERSION"
+                  WP_MAJOR="${WP_VERSION_ARRAY[0]}.${WP_VERSION_ARRAY[1]}"
+                  echo "::set-output name=branches::[\"wp/$WP_MAJOR\",\"$PREVIOUS_RELEASE_BRANCH\",\"$CURRENT_RELEASE_BRANCH\"]"
+                  echo "::set-output name=wp-version::$WP_MAJOR"
+
+            - name: Set branches to current PR's and trunk
+              id: get-pull-request-branches
+              if: github.event_name == 'pull_request'
+              run: echo "::set-output name=branches::[\"$GITHUB_SHA\",\"trunk\"]"
+
+    performance-tests:
+        name: Run performance tests
+        needs: determine-branches
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                branch: ${{ fromJson( needs.determine-branches.outputs.branches ) }}
+                test-suite: ${{ fromJson( needs.determine-branches.outputs.test-suites ) }}
+        env:
+            tests-branch: ${{ fromJson( needs.determine-branches.outputs.branches )[ 0 ] }} # First matrix entry also serves as tests branch
+        steps:
+            - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+              with:
+                  ref: ${{ env.tests-branch }}
+                  path: performance-tests
+
+            - name: Set WordPress version
+              if: ${{ needs.determine-branches.outputs.wp-version }}
+              env:
+                  WP_VERSION: ${{ needs.determine-branches.outputs.wp-version }}
+              run: |
+                  echo "{ \"core\": \"https://wordpress.org/wordpress-$WP_VERSION.zip\" }" > .wp-env.override.json
 
             - name: Use Node.js 14.x
               uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # v2.1.5
@@ -35,25 +82,84 @@ jobs:
                   path: ~/.npm
                   key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
-            - name: Npm install
-              run: |
-                  npm ci
+            - name: Install dependencies and build packages
+              working-directory: performance-tests
+              run: npm install && npm run build:packages
 
-            - name: Compare performance with trunk
-              if: github.event_name == 'pull_request'
-              run: ./bin/plugin/cli.js perf --ci $GITHUB_SHA trunk --tests-branch $GITHUB_SHA
+            - name: Copy performance-tests directory to environment directory
+              run: cp -R performance-tests environment
 
-            - name: Compare performance with current WordPress Core and previous Gutenberg versions
-              if: github.event_name == 'release'
+            - name: Start the WordPress environment
+              working-directory: environment
+              run: npm run wp-env start
+
+            - name: Switch environment to ${{ matrix.branch }} branch
+              uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+              with:
+                  ref: ${{ matrix.branch }}
+                  path: environment
+
+            - name: Build ${{ matrix.branch }} branch
+              working-directory: environment
+              run: rm -rf node_modules packages/*/node_modules && npm install && npm run build
+
+            - name: Run ${{ matrix.test-suite }} test suite
+              uses: actions/github-script@v4
               env:
-                  PLUGIN_VERSION: ${{ github.event.release.name }}
-              shell: bash
-              run: |
-                  IFS=. read -ra PLUGIN_VERSION_ARRAY <<< "$PLUGIN_VERSION"
-                  CURRENT_RELEASE_BRANCH="release/${PLUGIN_VERSION_ARRAY[0]}.${PLUGIN_VERSION_ARRAY[1]}"
-                  PREVIOUS_VERSION_BASE_10=$((PLUGIN_VERSION_ARRAY[0] * 10 + PLUGIN_VERSION_ARRAY[1] - 1))
-                  PREVIOUS_RELEASE_BRANCH="release/$((PREVIOUS_VERSION_BASE_10 / 10)).$((PREVIOUS_VERSION_BASE_10 % 10))"
-                  WP_VERSION=$(awk -F ': ' '/^Tested up to/{print $2}' readme.txt)
-                  IFS=. read -ra WP_VERSION_ARRAY <<< "$WP_VERSION"
-                  WP_MAJOR="${WP_VERSION_ARRAY[0]}.${WP_VERSION_ARRAY[1]}"
-                  ./bin/plugin/cli.js perf --ci "wp/$WP_MAJOR" "$PREVIOUS_RELEASE_BRANCH" "$CURRENT_RELEASE_BRANCH" --wp-version "$WP_MAJOR"
+                  BRANCH: ${{ matrix.branch }}
+                  TEST_SUITE: ${{ matrix.test-suite }}
+              with:
+                  script: |
+                      const { BRANCH: branch, TEST_SUITE: testSuite } = process.env;
+                      const fs = require('fs');
+                      const { runTestSuite } = require( './performance-tests/bin/plugin/commands/performance.js' );
+                      const results = await runTestSuite( testSuite, './performance-tests' );
+                      fs.writeFileSync( `./results.json`, JSON.stringify( results ) );
+
+            - name: Upload test results artifact
+              uses: actions/upload-artifact@e448a9b857ee2131e752b06002bf0e093c65e571 # v2.2.2
+              with:
+                  name: ${{ matrix.test-suite }}--${{ matrix.branch }}
+                  path: results.json
+
+            - name: Stop the WordPress environment
+              working-directory: environment
+              run: npm run wp-env stop
+
+    evaluate-test-results:
+        name: Evaluate performance test results
+        needs: [determine-branches, performance-tests]
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download results artifacts
+              uses: actions/download-artifact@4a7a711286f30c025902c28b541c10e147a9b843 # v2.0.8
+
+            - name: Display structure of downloaded files
+              run: ls -R
+
+            - name: Aggregate test results
+              uses: actions/github-script@v4
+              env:
+                  BRANCHES: ${{ needs.determine-branches.outputs.branches }}
+                  TEST_SUITES: ${{ needs.determine-branches.outputs.test-suites }}
+              with:
+                  script: |
+                      const branches = JSON.parse( process.env.BRANCHES );
+                      const testSuites = JSON.parse( process.env.TEST_SUITES );
+                      const fs = require('fs');
+                      let results = {};
+                      for ( testSuite of testSuites ) {
+                        results[ testSuite ] = {};
+                        for ( branch of branches ) {
+                          let result = require( `./${ testSuite }--${ branch }/results.json` );
+                          for ( test of Object.keys( result ) ) {
+                            if ( ! results[ test ] ) {
+                              results[ test ] = {};
+                            }
+                            results[ testSuite ][ test ][ branch ] = result[ test ];
+                          }
+                        }
+                        console.log( `\n>> ${ testSuite }\n` );
+                        console.table( results[ testSuite ] );
+                      }
