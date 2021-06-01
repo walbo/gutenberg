@@ -116,7 +116,7 @@ jobs:
                       const fs = require('fs');
                       const { runTestSuite } = require( './performance-tests/bin/plugin/commands/performance.js' );
                       const results = await runTestSuite( testSuite, './performance-tests' );
-                      const pathName = `./${ testSuite }/${ branch }`;
+                      const pathName = `./results/${ testSuite }/${ branch }`;
                       fs.mkdirSync( pathName, { recursive: true } );
                       fs.writeFileSync( `${ pathName }/results.json`, JSON.stringify( results ) );
 
@@ -124,7 +124,9 @@ jobs:
               uses: actions/upload-artifact@e448a9b857ee2131e752b06002bf0e093c65e571 # v2.2.2
               with:
                   name: performance-test-results
-                  path: ${{ matrix.test-suite }}/${{ matrix.branch }}/results.json
+                  # The wildcard is only used to preserve the directory hiearchy, see
+                  # https://github.com/actions/upload-artifact#upload-using-multiple-paths-and-exclusions.
+                  path: '*/${{ matrix.test-suite }}/${{ matrix.branch }}/results.json'
 
             - name: Stop the WordPress environment
               working-directory: environment
