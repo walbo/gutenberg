@@ -116,13 +116,15 @@ jobs:
                       const fs = require('fs');
                       const { runTestSuite } = require( './performance-tests/bin/plugin/commands/performance.js' );
                       const results = await runTestSuite( testSuite, './performance-tests' );
-                      fs.writeFileSync( `./results.json`, JSON.stringify( results ) );
+                      const pathName = `./${ testSuite }/${ branch }`;
+                      fs.mkdirSync( pathName, { recursive: true } );
+                      fs.writeFileSync( `${ pathName }/results.json`, JSON.stringify( results ) );
 
             - name: Upload test results artifact
               uses: actions/upload-artifact@e448a9b857ee2131e752b06002bf0e093c65e571 # v2.2.2
               with:
-                  name: ${{ matrix.test-suite }}--${{ matrix.branch }}
-                  path: results.json
+                  name: performance-test-results
+                  path: ${{ matrix.test-suite }}/${{ matrix.branch }}/results.json
 
             - name: Stop the WordPress environment
               working-directory: environment
@@ -136,6 +138,8 @@ jobs:
         steps:
             - name: Download results artifacts
               uses: actions/download-artifact@4a7a711286f30c025902c28b541c10e147a9b843 # v2.0.8
+              with:
+                  name: performance-test-results
 
             - name: Display structure of downloaded files
               run: ls -R
@@ -154,7 +158,7 @@ jobs:
                       for ( testSuite of testSuites ) {
                         results[ testSuite ] = {};
                         for ( branch of branches ) {
-                          let result = require( `./${ testSuite }--${ branch }/results.json` );
+                          let result = require( `./${ testSuite }/${ branch }/results.json` );
                           for ( test of Object.keys( result ) ) {
                             if ( ! results[ testSuite ][ test ] ) {
                               results[ testSuite ][ test ] = {};
