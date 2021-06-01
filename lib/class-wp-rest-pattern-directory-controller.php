@@ -19,7 +19,7 @@
  *
  * @see WP_REST_Controller
  */
-class WP_REST_Pattern_Directory_Controller_V2 extends WP_REST_Controller {
+class WP_REST_Pattern_Directory_Controller extends WP_REST_Controller {
 
 	/**
 	 * Constructs the controller.
