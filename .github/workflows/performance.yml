@@ -143,9 +143,6 @@ jobs:
               with:
                   name: performance-test-results
 
-            - name: Display structure of downloaded files
-              run: ls -R
-
             - name: Aggregate test results
               uses: actions/github-script@v4
               env:
