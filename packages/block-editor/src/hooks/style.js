@@ -37,7 +37,7 @@ import { BORDER_SUPPORT_KEY, BorderPanel } from './border';
 import { COLOR_SUPPORT_KEY, ColorEdit } from './color';
 import { FONT_SIZE_SUPPORT_KEY } from './font-size';
 import { TypographyPanel, TYPOGRAPHY_SUPPORT_KEYS } from './typography';
-import { SPACING_SUPPORT_KEY, SpacingPanel } from './spacing';
+import { SPACING_SUPPORT_KEY, DimensionsPanel } from './dimensions';
 import useDisplayBlockControls from '../components/use-display-block-controls';
 
 const styleSupportKeys = [
@@ -227,7 +227,7 @@ export const withBlockControls = createHigherOrderComponent(
 						<TypographyPanel { ...props } />
 						<BorderPanel { ...props } />
 						<ColorEdit { ...props } />
-						<SpacingPanel { ...props } />
+						<DimensionsPanel { ...props } />
 					</>
 				) }
 				<BlockEdit { ...props } />
