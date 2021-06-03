@@ -349,12 +349,6 @@ public class RNReactNativeGutenbergBridge: RCTEventEmitter {
             self.delegate?.gutenbergDidSendButtonPressedAction(button)
         }
     }
-
-    @objc
-    func requestHasLaunchedGutenbergEditor(_ callback: @escaping RCTResponseSenderBlock) {
-        callback([self.delegate?.gutenbergDidRequestHasLaunchedGutenbergEditor() ?? true])
-    }
-
 }
 
 // MARK: - RCTBridgeModule delegate

@@ -375,10 +375,4 @@ export function setFocalPointPickerTooltipShown( tooltipShown ) {
 	);
 }
 
-export function requestHasLaunchedGutenbergEditor( callback ) {
-	return RNReactNativeGutenbergBridge.requestHasLaunchedGutenbergEditor(
-		callback
-	);
-}
-
 export default RNReactNativeGutenbergBridge;

@@ -31,6 +31,5 @@ RCT_EXTERN_METHOD(setFocalPointPickerTooltipShown:(BOOL)tooltipShown)
 RCT_EXTERN_METHOD(actionButtonPressed:(NSString *)buttonType)
 RCT_EXTERN_METHOD(mediaSaveSync)
 RCT_EXTERN_METHOD(mediaFilesBlockReplaceSync:(NSArray<NSDictionary *> *)mediaFiles clientId:(NSString *)clientId)
-RCT_EXTERN_METHOD(requestHasLaunchedGutenbergEditor:(RCTResponseSenderBlock)callback)
 
 @end

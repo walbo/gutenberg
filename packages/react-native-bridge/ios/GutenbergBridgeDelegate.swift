@@ -24,7 +24,7 @@ public enum Capabilities: String {
     case canEnableUnsupportedBlockEditor
     case audioBlock
     case reusableBlock
-    case canViewEditorOnboarding
+    case editorOnboarding
 }
 
 /// Wrapper for single block data
@@ -232,9 +232,6 @@ public protocol GutenbergBridgeDelegate: class {
     func gutenbergDidRequestMediaFilesUploadCancelDialog(_ mediaFiles: [[String: Any]])
 
     func gutenbergDidRequestMediaFilesSaveCancelDialog(_ mediaFiles: [[String: Any]])
-
-    /// Tells the delegate that the editor requested whether Gutenberg has launched before
-    func gutenbergDidRequestHasLaunchedGutenbergEditor() -> Bool
 }
 
 // MARK: - Optional GutenbergBridgeDelegate methods

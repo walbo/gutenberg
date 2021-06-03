@@ -20,7 +20,6 @@ import {
 	insertAfter,
 	insertBefore,
 } from '@wordpress/icons';
-import { requestHasLaunchedGutenbergEditor } from '@wordpress/react-native-bridge';
 
 /**
  * Internal dependencies
@@ -33,8 +32,7 @@ import { store as blockEditorStore } from '../../store';
 const VOICE_OVER_ANNOUNCEMENT_DELAY = 1000;
 
 const defaultRenderToggle = ( {
-	canViewEditorOnboarding,
-	hasLaunchedGutenbergEditor,
+	enableEditorOnboarding,
 	onToggle,
 	disabled,
 	style,
@@ -42,7 +40,7 @@ const defaultRenderToggle = ( {
 } ) => (
 	<ToolbarButton
 		title={
-			canViewEditorOnboarding && ! hasLaunchedGutenbergEditor
+			enableEditorOnboarding
 				? __( 'Tap to add content' )
 				: __( 'Add block' )
 		}
@@ -53,7 +51,7 @@ const defaultRenderToggle = ( {
 				color={ style.color }
 			/>
 		}
-		showTooltip={ canViewEditorOnboarding && ! hasLaunchedGutenbergEditor }
+		showTooltip={ enableEditorOnboarding }
 		tooltipPosition="top right"
 		onClick={ onToggle }
 		extraProps={ {
@@ -70,26 +68,9 @@ export class Inserter extends Component {
 	constructor() {
 		super( ...arguments );
 
-		this.state = {
-			hasLaunchedGutenbergEditor: true,
-		};
-
 		this.onToggle = this.onToggle.bind( this );
 		this.renderInserterToggle = this.renderInserterToggle.bind( this );
 		this.renderContent = this.renderContent.bind( this );
-	}
-
-	componentDidMount() {
-		this._isMounted = true;
-		requestHasLaunchedGutenbergEditor( ( hasLaunchedGutenbergEditor ) => {
-			if ( this._isMounted ) {
-				this.setState( { hasLaunchedGutenbergEditor } );
-			}
-		} );
-	}
-
-	componentWillUnmount() {
-		this._isMounted = false;
 	}
 
 	getInsertionOptions() {
@@ -218,8 +199,7 @@ export class Inserter extends Component {
 	 */
 	renderInserterToggle( { onToggle, isOpen } ) {
 		const {
-			canViewEditorOnboarding,
-			hasLaunchedGutenbergEditor,
+			enableEditorOnboarding,
 			disabled,
 			renderToggle = defaultRenderToggle,
 			getStylesFromColorScheme,
@@ -266,9 +246,7 @@ export class Inserter extends Component {
 		return (
 			<>
 				{ renderToggle( {
-					canViewEditorOnboarding,
-					hasLaunchedGutenbergEditor: this.state
-						.hasLaunchedGutenbergEditor,
+					enableEditorOnboarding,
 					onToggle: onPress,
 					isOpen,
 					disabled,
@@ -399,8 +377,7 @@ export default compose( [
 		const insertionIndexEnd = endOfRootIndex;
 
 		return {
-			canViewEditorOnboarding: getBlockEditorSettings()
-				.canViewEditorOnboarding,
+			enableEditorOnboarding: getBlockEditorSettings().editorOnboarding,
 			destinationRootClientId,
 			insertionIndexDefault: getDefaultInsertionIndex(),
 			insertionIndexBefore,
