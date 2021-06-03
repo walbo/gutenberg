@@ -349,6 +349,7 @@ public class RNReactNativeGutenbergBridge: RCTEventEmitter {
             self.delegate?.gutenbergDidSendButtonPressedAction(button)
         }
     }
+
 }
 
 // MARK: - RCTBridgeModule delegate
