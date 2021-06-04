@@ -43,6 +43,11 @@ export function DimensionsPanel( props ) {
 		return null;
 	}
 
+	const defaultSpacingControls = getBlockSupport( props.name, [
+		SPACING_SUPPORT_KEY,
+		'__experimentalDefaultControls',
+	] );
+
 	// Callback to reset all block support attributes controlled via this panel.
 	const resetAll = () => {
 		const { style } = props.attributes;
@@ -72,6 +77,7 @@ export function DimensionsPanel( props ) {
 						hasValue={ hasPaddingValue }
 						label={ __( 'Padding' ) }
 						reset={ resetPadding }
+						isShownByDefault={ defaultSpacingControls?.padding }
 					/>
 				) }
 				{ ! isMarginDisabled && (
@@ -80,6 +86,7 @@ export function DimensionsPanel( props ) {
 						hasValue={ hasMarginValue }
 						label={ __( 'Margin' ) }
 						reset={ resetMargin }
+						isShownByDefault={ defaultSpacingControls?.margin }
 					/>
 				) }
 			</BlockSupportPanel>
