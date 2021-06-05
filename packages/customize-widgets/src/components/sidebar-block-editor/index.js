@@ -32,6 +32,9 @@ import { store as customizeWidgetsStore } from '../../store';
 import WelcomeGuide from '../welcome-guide';
 import KeyboardShortcuts from '../keyboard-shortcuts';
 
+// Used to offset the block toolbar’s sticky top
+const headerHeight = 49;
+
 export default function SidebarBlockEditor( {
 	blockEditorSettings,
 	sidebar,
@@ -112,7 +115,7 @@ export default function SidebarBlockEditor( {
 					isFixedToolbarActive={ isFixedToolbarActive }
 				/>
 
-				<BlockTools>
+				<BlockTools __experimentalStickyTop={ headerHeight }>
 					<BlockSelectionClearer>
 						<WritingFlow>
 							<ObserveTyping>
