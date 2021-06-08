@@ -12,7 +12,6 @@ import {
 	store as coreStore,
 	__experimentalFetchLinkSuggestions as fetchLinkSuggestions,
 	__experimentalFetchRemoteUrlData as fetchRemoteUrlData,
-	__experimentalFetchMenuCustomItems as fetchMenuCustomItems,
 } from '@wordpress/core-data';
 
 /**
@@ -105,8 +104,6 @@ function useBlockEditorSettings( settings, hasTemplate ) {
 				fetchLinkSuggestions( search, searchOptions, settings ),
 			__experimentalFetchRemoteUrlData: ( url ) =>
 				fetchRemoteUrlData( url ),
-			__experimentalFetchMenuCustomItems: ( search, searchOptions ) =>
-				fetchMenuCustomItems( search, searchOptions, settings ),
 			__experimentalCanUserUseUnfilteredHTML: canUseUnfilteredHTML,
 			__experimentalUndo: undo,
 			outlineMode: hasTemplate,
