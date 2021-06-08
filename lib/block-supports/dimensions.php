@@ -21,7 +21,7 @@ function gutenberg_register_dimensions_support( $block_type ) {
 		return;
 	}
 
-	$has_dimensions_support = gutenberg_block_has_support( $block_type, array( 'dimensions' ), false );
+	$has_dimensions_support = gutenberg_block_has_support( $block_type, array( '__experimentalDimensions' ), false );
 	$has_spacing_support    = gutenberg_block_has_support( $block_type, array( 'spacing' ), false );
 
 	if ( $has_dimensions_support || $has_spacing_support ) {
@@ -62,7 +62,7 @@ function gutenberg_get_dimensions_styles( $block_type, $block_attributes ) {
 		return array();
 	}
 
-	$has_height_support = gutenberg_block_has_support( $block_type, array( 'dimensions', 'height' ), false );
+	$has_height_support = gutenberg_block_has_support( $block_type, array( '__experimentalDimensions', 'height' ), false );
 	$styles             = array();
 
 	if ( $has_height_support ) {
@@ -126,7 +126,7 @@ function gutenberg_get_spacing_styles( $block_type, $block_attributes ) {
  * @return boolean Whether to serialize dimensions support styles & classes.
  */
 function gutenberg_skip_dimensions_serialization( $block_type ) {
-	$dimensions_support = _wp_array_get( $block_type->supports, array( 'dimensions' ), false );
+	$dimensions_support = _wp_array_get( $block_type->supports, array( '__experimentalDimensions' ), false );
 
 	return is_array( $dimensions_support ) &&
 		array_key_exists( '__experimentalSkipSerialization', $dimensions_support ) &&

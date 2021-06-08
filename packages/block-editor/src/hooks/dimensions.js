@@ -32,7 +32,7 @@ import {
 	useIsPaddingDisabled,
 } from './padding';
 
-export const DIMENSIONS_SUPPORT_KEY = 'dimensions';
+export const DIMENSIONS_SUPPORT_KEY = '__experimentalDimensions';
 export const SPACING_SUPPORT_KEY = 'spacing';
 
 /**
