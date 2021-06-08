@@ -83,11 +83,12 @@ export function HeightEdit( props ) {
 	} = props;
 
 	const units = useCustomUnits( {
-		availableUnits: useSetting( 'spacing.units' ) || [
+		availableUnits: useSetting( 'dimensions.units' ) || [
 			'%',
 			'px',
 			'em',
 			'rem',
+			'vh',
 			'vw',
 		],
 	} );
