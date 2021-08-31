@@ -41,7 +41,9 @@ jobs:
               uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
               with:
                   name: build
-                  path: build
+                  path: |
+                      build
+                      packages/*/build*
 
     admin:
         name: Admin - ${{ matrix.part }}
