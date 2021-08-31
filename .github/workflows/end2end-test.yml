@@ -16,14 +16,11 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    admin:
-        name: Admin - ${{ matrix.part }}
+    build:
         runs-on: ubuntu-latest
         if: ${{ github.repository == 'WordPress/gutenberg' || github.event_name == 'pull_request' }}
         strategy:
-            fail-fast: false
             matrix:
-                part: [1, 2, 3, 4]
                 node: ['14']
 
         steps:
@@ -40,9 +37,42 @@ jobs:
                   npm ci
                   npm run build
 
+            - name: Archive build artifacts
+              uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # v2.2.4
+              with:
+                  name: build
+                  path: build
+
+    admin:
+        name: Admin - ${{ matrix.part }}
+        needs: build
+        runs-on: ubuntu-latest
+        if: ${{ github.repository == 'WordPress/gutenberg' || github.event_name == 'pull_request' }}
+        strategy:
+            fail-fast: false
+            matrix:
+                part: [1, 2, 3, 4]
+                node: ['14']
+
+        steps:
+            - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@3be87be14a055c47b01d3bd88f8fe02320a9bb60 # 2.0.10
+              with:
+                  name: build
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@38d90ce44d5275ad62cc48384b3d8a58c500bb5f # v2.2.2
+              with:
+                  node-version: ${{ matrix.node }}
+                  cache: npm
+
+            - name: Npm install
+              run: npm ci
+
             - name: Install WordPress
-              run: |
-                  npm run wp-env start
+              run: npm run wp-env start
 
             - name: Running the tests
               run: |
